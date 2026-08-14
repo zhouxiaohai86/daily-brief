@@ -1,0 +1,11 @@
+# 运行时产物
+public/
+data/briefs.json
+data/raw/
+__pycache__/
+*.pyc
+
+# 本地环境
+.wrangler/
+deploy_out.txt
+node_modules/
