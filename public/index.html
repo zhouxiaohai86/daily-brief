@@ -3,116 +3,392 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>每日情报简报 · 2026 年 8 月 14 日 · 星期五</title>
+<title>每日情报简报</title>
 <style>
+/* ========== 设计令牌 Design Tokens v3 ========== */
 :root {
-  --bg:#eef0f4; --bg-soft:#e7eaf0; --card:#fff;
-  --ink:#111827; --ink-2:#374151; --ink-3:#6b7280; --ink-4:#9ca3af;
-  --brand:#c41e3a; --brand-2:#a01830; --brand-soft:#fdeef0;
-  --hero1:#161a2b; --hero2:#232845; --hero3:#3a1c33;
-  --line:#e5e7eb; --line-soft:#f0f1f4; --link:#1d4ed8;
-  --ok:#059669; --warn:#d97706; --danger:#dc2626;
-  --tag-source-bg:#eef2ff; --tag-source-fg:#4338ca;
-  --tag-rpm-bg:#ecfdf5; --tag-rpm-fg:#047857;
-  --tag-warn-bg:#fef2f2; --tag-warn-fg:#b91c1c;
-  --tag-hot-bg:#fffbeb; --tag-hot-fg:#b45309;
-  --tag-info-bg:#f3f4f6; --tag-info-fg:#4b5563;
-  --fs-xs:11px; --fs-sm:12.5px; --fs-md:13.5px; --fs-body:15px; --fs-lg:16.5px; --fs-xl:19px; --fs-2xl:24px; --fs-3xl:30px;
-  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-8:32px;
-  --r-sm:8px; --r-md:14px; --r-lg:20px;
-  --shadow-card:0 1px 2px rgba(17,24,39,.04),0 4px 14px rgba(17,24,39,.05);
-  --shadow-pop:0 12px 40px rgba(17,24,39,.16);
-  --shadow-hero:0 12px 32px rgba(22,26,43,.28);
-  --t-fast:150ms ease; --t-base:260ms cubic-bezier(.4,0,.2,1);
+  --bg: #eef0f4;            /* 页面底：冷灰 */
+  --bg-soft: #e7eaf0;
+  --card: #ffffff;
+  --ink: #111827;           /* 主墨色 */
+  --ink-2: #374151;
+  --ink-3: #6b7280;
+  --ink-4: #9ca3af;
+  --brand: #c41e3a;         /* 品牌红（真题红延续） */
+  --brand-2: #a01830;
+  --brand-soft: #fdeef0;
+  --hero1: #161a2b;
+  --hero2: #232845;
+  --hero3: #3a1c33;
+  --line: #e5e7eb;
+  --line-soft: #f0f1f4;
+  --link: #1d4ed8;
+  --ok: #059669;
+  --warn: #d97706;
+  --danger: #dc2626;
+  --tag-source-bg: #eef2ff; --tag-source-fg: #4338ca;
+  --tag-rpm-bg: #ecfdf5;    --tag-rpm-fg: #047857;
+  --tag-warn-bg: #fef2f2;   --tag-warn-fg: #b91c1c;
+  --tag-hot-bg: #fffbeb;    --tag-hot-fg: #b45309;
+  --tag-info-bg: #f3f4f6;   --tag-info-fg: #4b5563;
+  --fs-xs: 11px; --fs-sm: 12.5px; --fs-md: 13.5px; --fs-body: 15px; --fs-lg: 16.5px; --fs-xl: 19px; --fs-2xl: 24px; --fs-3xl: 30px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px;
+  --r-sm: 8px; --r-md: 14px; --r-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(17,24,39,.04), 0 4px 14px rgba(17,24,39,.05);
+  --shadow-pop: 0 12px 40px rgba(17,24,39,.16);
+  --shadow-hero: 0 12px 32px rgba(22,26,43,.28);
+  --t-fast: 150ms ease; --t-base: 260ms cubic-bezier(.4,0,.2,1);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; scroll-padding-top:64px; }
-body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif; line-height:1.75; font-size:var(--fs-body); padding:0 0 56px; -webkit-text-size-adjust:100%; }
-a { color:inherit; text-decoration:none; }
-button { font-family:inherit; }
-.hidden { display:none !important; }
+html { scroll-behavior:smooth; scroll-padding-top: 64px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+  padding: 0 0 56px;
+  line-height: 1.75;
+  font-size: var(--fs-body);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+:focus { outline:none; }
+:focus-visible { outline:2px solid var(--brand); outline-offset:2px; border-radius:var(--r-sm); }
+::selection { background:var(--brand); color:#fff; }
 
-.password-overlay { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 30% 20%, rgba(196,30,58,.28), transparent 45%), linear-gradient(160deg, var(--hero1), var(--hero2) 55%, var(--hero3)); }
-.password-brand { position:absolute; top:48px; letter-spacing:4px; font-size:var(--fs-sm); color:rgba(255,255,255,.55); }
-.password-box { width:min(340px, 86vw); background:rgba(255,255,255,.97); border-radius:var(--r-lg); padding:40px 28px 28px; text-align:center; box-shadow:var(--shadow-pop); backdrop-filter:blur(6px); }
-.password-box h2 { font-size:var(--fs-xl); margin-bottom:4px; color:var(--ink); }
-.password-box .sub { color:var(--ink-3); font-size:var(--fs-sm); margin-bottom:24px; }
-.pw-field { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:16px; }
-.pw-field input { width:180px; padding:12px 14px; border:1px solid var(--line); border-radius:var(--r-md); text-align:center; letter-spacing:6px; font-size:var(--fs-lg); }
-.pw-field input:focus { border-color:var(--brand); outline:none; }
-.pw-toggle { border:none; background:transparent; font-size:18px; cursor:pointer; }
-#pwBtn { width:100%; padding:13px; border:none; border-radius:var(--r-md); background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:#fff; font-size:var(--fs-body); font-weight:600; cursor:pointer; box-shadow:0 8px 20px rgba(196,30,58,.32); transition:var(--t-fast); }
-#pwBtn:hover { transform:translateY(-1px); box-shadow:0 10px 22px rgba(196,30,58,.38); }
-.error { display:none; color:var(--danger); font-size:var(--fs-sm); margin-top:12px; }
-.error.show { display:block; }
-.pw-hint { margin-top:14px; color:var(--ink-4); font-size:var(--fs-xs); }
-.shake { animation:shake .4s; }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+/* ===== 密码遮罩（现代暗面） ===== */
+.password-overlay {
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  background: radial-gradient(ellipse at 50% -10%, rgba(196,30,58,.28) 0%, transparent 55%),
+              linear-gradient(165deg, var(--hero1) 0%, var(--hero2) 50%, #0c0e18 100%);
+  padding: 24px;
+}
+.password-overlay.hidden { display:none; }
+.password-brand {
+  font-size: 11px; letter-spacing:5px; color: rgba(255,255,255,.45);
+  margin-bottom: var(--sp-5); text-transform: uppercase; font-weight:600;
+}
+.password-box {
+  text-align:center; padding: 36px 28px 28px;
+  width:100%; max-width: 340px;
+  background: rgba(255,255,255,.97);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop);
+  backdrop-filter: blur(6px);
+}
+.password-box h2 { font-size: var(--fs-2xl); font-weight:800; color: var(--ink); letter-spacing:2px; }
+.password-box .sub { font-size: var(--fs-md); color: var(--ink-4); margin: var(--sp-1) 0 var(--sp-6); }
+.pw-field { position:relative; }
+.pw-field input {
+  width:100%; padding: 14px 46px 14px 14px; font-size: var(--fs-lg);
+  border:1.5px solid var(--line); border-radius: var(--r-md);
+  outline:none; text-align:center; letter-spacing:6px; color:var(--ink);
+  background: var(--bg); transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+}
+.pw-field input::placeholder { color:var(--ink-4); letter-spacing:2px; }
+.pw-field input:focus { border-color: var(--brand); background:#fff; box-shadow:0 0 0 4px var(--brand-soft); }
+.pw-toggle {
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  background:none; border:none; cursor:pointer; color:var(--ink-4); font-size: var(--fs-md); padding:6px; line-height:1;
+}
+.pw-toggle:hover { color:var(--brand); }
+#pwBtn {
+  width:100%; margin-top: var(--sp-4); padding: 14px;
+  font-size: var(--fs-lg); font-weight:700; letter-spacing:6px; text-indent:6px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color:#fff; border:none; border-radius: var(--r-md); cursor:pointer;
+  box-shadow: 0 6px 16px rgba(196,30,58,.30);
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+#pwBtn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(196,30,58,.38); }
+#pwBtn:active { transform: translateY(1px); }
+.password-box .error {
+  font-size: var(--fs-md); color: var(--danger); margin-top: var(--sp-3);
+  display:none; align-items:center; justify-content:center; gap:6px; font-weight:600;
+}
+.password-box .error.show { display:flex; }
+.password-box .error::before { content:"!"; display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:var(--danger); color:#fff; font-size:11px; font-weight:700; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+.password-box.shake { animation: shake .35s ease; }
+.pw-hint { margin-top: var(--sp-6); font-size: var(--fs-sm); color: rgba(255,255,255,.4); }
 
-.history-bar { position:sticky; top:0; z-index:100; display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(238,240,244,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
-.nav-btn { padding:8px 14px; border:1px solid var(--line); border-radius:var(--r-md); background:var(--card); color:var(--ink-2); font-size:var(--fs-sm); cursor:pointer; }
-.nav-btn:disabled { opacity:.4; cursor:not-allowed; }
-#dateSelect { flex:1; min-width:0; padding:8px 10px; border:1px solid var(--line); border-radius:var(--r-md); background:var(--card); font-size:var(--fs-sm); color:var(--ink); }
-.today-chip { display:none; padding:4px 10px; border-radius:999px; background:var(--brand-soft); color:var(--brand); font-size:var(--fs-xs); font-weight:600; }
+/* ===== 历史选择器 ===== */
+.history-bar {
+  background: rgba(238,240,244,.92);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  padding: var(--sp-2) var(--sp-3);
+  display:flex; align-items:center; justify-content:center; gap: var(--sp-2);
+  font-size: var(--fs-sm);
+}
+.history-bar select {
+  padding: 9px 12px; font-size: var(--fs-sm);
+  border:1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--ink-2); outline:none; cursor:pointer;
+  min-height: 40px; box-shadow: var(--shadow-card);
+  transition: border-color var(--t-fast);
+}
+.history-bar select:focus { border-color: var(--brand); }
+.history-bar .nav-btn {
+  padding: 9px 14px; font-size: var(--fs-sm); min-height: 40px;
+  border:1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--ink-2); cursor:pointer;
+  box-shadow: var(--shadow-card);
+  transition: all var(--t-fast); touch-action: manipulation;
+}
+.history-bar .nav-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); }
+.history-bar .nav-btn:disabled { opacity:.4; cursor:default; }
+.history-bar .today-chip {
+  display:none; padding: 4px 10px; font-size: var(--fs-xs);
+  border-radius: 999px; background: var(--brand); color:#fff; font-weight:700;
+}
 
-.main-content { max-width:750px; margin:0 auto; padding:0 16px; }
-.hero { margin:16px 0 0; padding:36px 22px 30px; border-radius:var(--r-lg); background:linear-gradient(135deg, var(--hero1), var(--hero2) 55%, var(--hero3)); color:#fff; box-shadow:var(--shadow-hero); }
-.hero-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-.hero-kicker { letter-spacing:3px; font-size:var(--fs-xs); color:rgba(255,255,255,.6); }
-.hero-live { padding:4px 10px; border-radius:999px; background:rgba(255,255,255,.14); font-size:var(--fs-xs); }
-.hero h1 { font-size:var(--fs-3xl); margin-bottom:6px; }
-.hero h1 .accent { color:#ff8a9a; }
-.hero .date { color:rgba(255,255,255,.75); font-size:var(--fs-md); margin-bottom:16px; }
-.stats-row { display:flex; flex-wrap:wrap; gap:8px; }
-.stat-pill { padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.12); font-size:var(--fs-sm); }
-.stat-pill b { color:#ffd9a0; }
+/* ===== 内容区 ===== */
+.main-content { animation: fadeIn .4s ease; }
+.main-content.hidden { display:none; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 
-.quick-hits { margin:-20px 8px 0; position:relative; background:var(--card); border-radius:var(--r-lg); box-shadow:var(--shadow-pop); padding:18px 18px 8px; }
-.qh-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-.qh-title { font-weight:700; font-size:var(--fs-lg); position:relative; padding-left:12px; }
-.qh-title::before { content:""; position:absolute; left:0; top:4px; bottom:4px; width:4px; border-radius:2px; background:linear-gradient(var(--brand), #ff5c77); }
-.qh-more { color:var(--ink-4); font-size:var(--fs-xs); letter-spacing:1px; }
+/* ===== Hero 刊头（对标 Morning Brew 顶部品牌区） ===== */
+.hero {
+  background:
+    radial-gradient(ellipse at 85% -20%, rgba(196,30,58,.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 10% 120%, rgba(67,56,202,.22) 0%, transparent 45%),
+    linear-gradient(150deg, var(--hero1) 0%, var(--hero2) 60%, var(--hero3) 100%);
+  color:#fff;
+  padding: calc(30px + env(safe-area-inset-top,0px)) 22px 96px;
+  position:relative; overflow:hidden;
+  border-radius: 0 0 30px 30px;
+  box-shadow: var(--shadow-hero);
+}
+.hero::after {
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.hero-top { display:flex; align-items:center; justify-content:space-between; gap: var(--sp-2); position:relative; z-index:1; }
+.hero-kicker {
+  font-size: var(--fs-xs); letter-spacing:4px; text-transform:uppercase;
+  color: rgba(255,255,255,.55); font-weight:700;
+}
+.hero-live {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size: var(--fs-xs); font-weight:700; color:#fff;
+  background: rgba(196,30,58,.85); padding: 5px 12px; border-radius:999px;
+}
+.hero-live::before { content:""; width:6px; height:6px; border-radius:50%; background:#fff; animation: blink 1.4s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+.hero h1 {
+  font-size: var(--fs-3xl); font-weight:900; letter-spacing:2px;
+  margin-top: var(--sp-5); position:relative; z-index:1;
+}
+.hero h1 .accent { color:#ff5c77; }
+.hero .date {
+  font-size: var(--fs-md); color: rgba(255,255,255,.72);
+  margin-top: var(--sp-2); position:relative; z-index:1;
+}
+.hero .stats-row {
+  display:flex; gap: var(--sp-2); flex-wrap:wrap;
+  margin-top: var(--sp-4); position:relative; z-index:1;
+}
+.hero .stat-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size: var(--fs-xs); font-weight:600;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.9);
+  padding: 6px 12px; border-radius:999px;
+  backdrop-filter: blur(4px);
+}
+.hero .stat-pill b { color:#fff; font-weight:800; }
+
+/* ===== 今日速览 Quick Hits（Morning Brew 标志性设计） ===== */
+.quick-hits {
+  margin: -56px 16px 0; position:relative; z-index:5;
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop);
+  padding: var(--sp-5) var(--sp-4) var(--sp-4);
+}
+.quick-hits .qh-head {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: var(--sp-3);
+}
+.quick-hits .qh-title { font-size: var(--fs-lg); font-weight:800; color: var(--ink); display:flex; align-items:center; gap:8px; }
+.quick-hits .qh-title::before {
+  content:""; width:4px; height:18px; border-radius:2px;
+  background: linear-gradient(180deg, var(--brand), #ff5c77);
+}
+.quick-hits .qh-more { font-size: var(--fs-xs); color: var(--ink-4); }
 .qh-list { list-style:none; }
-.qh-list li { display:flex; gap:10px; padding:9px 0; border-bottom:1px solid var(--line-soft); }
-.qh-list li:last-child { border-bottom:none; }
-.qh-no { font-weight:700; color:var(--brand); font-size:var(--fs-sm); }
-.qh-cat { font-size:var(--fs-xs); color:var(--ink-4); margin-bottom:2px; }
-.qh-txt { font-size:var(--fs-md); color:var(--ink-2); line-height:1.5; }
+.qh-list li {
+  display:flex; align-items:flex-start; gap: var(--sp-3);
+  padding: var(--sp-3) 0; border-bottom:1px solid var(--line-soft);
+}
+.qh-list li:last-child { border-bottom:none; padding-bottom: var(--sp-1); }
+.qh-no {
+  flex:0 0 auto; width:26px; height:26px; border-radius:8px;
+  background: var(--brand-soft); color: var(--brand);
+  font-size: var(--fs-sm); font-weight:800;
+  display:inline-flex; align-items:center; justify-content:center;
+  margin-top:2px;
+}
+.qh-body { flex:1; min-width:0; }
+.qh-cat { font-size: var(--fs-xs); font-weight:700; color: var(--ink-4); letter-spacing:.5px; margin-bottom:2px; }
+.qh-txt { font-size: var(--fs-body); font-weight:600; color: var(--ink); line-height:1.55; }
+.qh-txt a { color: inherit; text-decoration:none; }
+.qh-list li:active { background: var(--bg); border-radius: var(--r-sm); }
 
-.section-nav { position:sticky; top:52px; z-index:90; display:flex; gap:8px; overflow-x:auto; padding:12px 4px; margin:4px -4px 0; }
-.section-nav a { flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border:1px solid var(--line); border-radius:999px; background:var(--card); color:var(--ink-2); font-size:var(--fs-sm); }
-.section-nav .nav-no { width:20px; height:20px; border-radius:50%; background:var(--brand-soft); color:var(--brand); font-size:var(--fs-xs); display:inline-flex; align-items:center; justify-content:center; }
+/* ===== 板块锚点导航 ===== */
+.section-nav {
+  position:sticky; top:0; z-index:80;
+  display:flex; gap: var(--sp-2); overflow-x:auto;
+  padding: var(--sp-3) 16px; margin: var(--sp-5) 0 0;
+  scrollbar-width:none; -webkit-overflow-scrolling:touch;
+}
+.section-nav::-webkit-scrollbar { display:none; }
+.section-nav a {
+  flex:0 0 auto;
+  display:inline-flex; align-items:center; gap:6px;
+  font-size: var(--fs-sm); font-weight:700; color: var(--ink-3);
+  background: var(--card); border:1px solid var(--line);
+  padding: 8px 14px; border-radius:999px; text-decoration:none;
+  box-shadow: var(--shadow-card);
+  transition: all var(--t-fast);
+}
+.section-nav a .nav-no {
+  width:18px; height:18px; border-radius:50%;
+  background: var(--ink-3); color:#fff; font-size: var(--fs-xs);
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.section-nav a:active { transform: scale(.96); }
 
-.section { background:var(--card); border-radius:var(--r-lg); box-shadow:var(--shadow-card); padding:20px 18px; margin-top:16px; }
-.section-title { display:flex; align-items:center; gap:8px; font-size:var(--fs-xl); font-weight:700; margin-bottom:16px; }
-.sec-no { width:26px; height:26px; border-radius:8px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:#fff; font-size:var(--fs-sm); display:inline-flex; align-items:center; justify-content:center; }
-.sec-line { flex:1; height:1px; background:var(--line); margin-left:8px; }
-.item { padding:14px 0; border-bottom:1px solid var(--line-soft); }
-.item:last-child { border-bottom:none; }
-.item-header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:6px; }
-.item-title { font-size:var(--fs-lg); font-weight:600; color:var(--ink); line-height:1.45; }
-.tag { flex:0 0 auto; padding:3px 10px; border-radius:999px; font-size:var(--fs-xs); font-weight:500; }
-.tag-hot { background:var(--tag-hot-bg); color:var(--tag-hot-fg); }
-.tag-source { background:var(--tag-source-bg); color:var(--tag-source-fg); }
-.tag-warn { background:var(--tag-warn-bg); color:var(--tag-warn-fg); }
-.tag-rpm { background:var(--tag-rpm-bg); color:var(--tag-rpm-fg); }
-.item-desc { color:var(--ink-2); font-size:var(--fs-md); margin-bottom:8px; }
-.item-desc b { color:var(--ink); }
-.item-meta { color:var(--ink-4); font-size:var(--fs-xs); }
-.source-link { color:var(--link); }
+/* ===== 板块 ===== */
+.section { margin: var(--sp-8) 16px 0; scroll-margin-top: 70px; }
+.section-title {
+  display:flex; align-items:center; gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+.section-title .sec-no {
+  flex:0 0 auto; min-width:38px; height:38px; padding:0 8px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color:#fff; font-size: var(--fs-lg); font-weight:900;
+  display:inline-flex; align-items:center; justify-content:center;
+  box-shadow: 0 4px 12px rgba(196,30,58,.28);
+}
+.section-title .icon { font-size: var(--fs-xl); }
+.section-title .st-name { font-size: var(--fs-xl); font-weight:900; color: var(--ink); letter-spacing:.5px; }
+.section-title .sec-line { flex:1; height:1px; background: linear-gradient(90deg, var(--line) 0%, transparent 100%); }
+
+/* ===== 条目卡片 ===== */
+.item {
+  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-5);
+  background: var(--card);
+  border:1px solid var(--line);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--r-md);
+  margin-bottom: var(--sp-3);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--t-fast), box-shadow var(--t-base), border-color var(--t-fast);
+}
+.item:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(17,24,39,.09); border-color: #d1d5db; }
+.item:last-child { margin-bottom: 0; }
+.item-header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap: var(--sp-2); margin-bottom: var(--sp-1); }
+.item-title { font-size: var(--fs-lg); font-weight:800; color:var(--ink); line-height:1.55; flex:1; min-width: 200px; }
+.item-title a { color: var(--link); text-decoration:none; }
+.item-title a:hover { text-decoration:underline; }
+.item-desc { font-size: var(--fs-body); color:var(--ink-2); line-height:1.85; margin-top: var(--sp-1); }
+.item-desc b { color: var(--ink); }
+.item-detail {
+  font-size: var(--fs-md); color: var(--ink-3); margin-top: var(--sp-2);
+  background: var(--bg); border-radius: var(--r-sm); padding: 6px 12px; display:inline-block;
+}
+.item-meta {
+  font-size: var(--fs-sm); color: var(--ink-4); margin-top: var(--sp-3);
+  display:flex; flex-wrap:wrap; gap: 6px 12px; align-items:center;
+  padding-top: var(--sp-2); border-top:1px dashed var(--line-soft);
+}
+
+/* ===== 标签 ===== */
+.tag { display:inline-block; padding: 3px 10px; border-radius:999px; font-size: var(--fs-xs); white-space:nowrap; font-weight:700; }
+.tag-source { background: var(--tag-source-bg); color: var(--tag-source-fg); }
+.tag-rpm { background: var(--tag-rpm-bg); color: var(--tag-rpm-fg); }
+.tag-warn { background: var(--tag-warn-bg); color: var(--tag-warn-fg); }
+.tag-hot { background: var(--tag-hot-bg); color: var(--tag-hot-fg); }
+.tag-info { background: var(--tag-info-bg); color: var(--tag-info-fg); }
+
+/* ===== 链接 ===== */
+.source-link {
+  font-size: var(--fs-sm); color: var(--link); text-decoration:none; font-weight:600;
+  display:inline-flex; align-items:center; gap:3px;
+}
+.source-link::after { content:"↗"; font-size: 10px; opacity:.75; }
 .source-link:hover { text-decoration:underline; }
 
-.footer-note { text-align:center; color:var(--ink-4); font-size:var(--fs-xs); padding:24px 16px 0; }
-.empty-state { text-align:center; color:var(--ink-3); padding:60px 0; }
+/* ===== 双栏 ===== */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap: var(--sp-5); align-items:start; }
+@media (max-width: 640px) { .two-col { grid-template-columns:1fr; } }
+.sub-title {
+  font-size: var(--fs-lg); font-weight:800; color: var(--ink-2);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2); border-bottom:1px dashed var(--line);
+  display:flex; align-items:center; gap:6px;
+}
+.sub-title::after { content:""; flex:1; height:1px; background: var(--line-soft); }
 
+/* ===== 评分条（四宫格） ===== */
+.score-bar {
+  display:grid; grid-template-columns:repeat(2, 1fr); gap: 8px;
+  margin-top: var(--sp-3);
+}
+.score-item {
+  display:flex; flex-direction:column; gap:2px;
+  background: var(--bg); padding: 8px 12px; border-radius: var(--r-sm);
+  border:1px solid var(--line-soft);
+}
+.score-label { font-size: var(--fs-xs); color: var(--ink-4); font-weight:600; }
+.score-val { font-size: var(--fs-md); font-weight:800; color: var(--ink-2); }
+.score-high { color: var(--ok); }
+.score-mid { color: var(--warn); }
+.score-low { color: var(--danger); }
+
+/* ===== 表格（卡片化） ===== */
+.table-wrap { margin-top: var(--sp-3); border:1px solid var(--line); border-radius: var(--r-md); overflow:hidden; box-shadow: var(--shadow-card); }
+table { width:100%; border-collapse:collapse; font-size: var(--fs-md); background: var(--card); }
+th {
+  text-align:left; padding: 10px 12px; color: var(--ink-2); font-weight:800;
+  border-bottom:2px solid var(--brand); font-size: var(--fs-sm);
+  background: linear-gradient(180deg, var(--bg) 0%, #f7f8fa 100%);
+}
+td { padding: 10px 12px; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+tr:nth-child(even) td { background: #fafbfc; }
+
+/* ===== 空状态 ===== */
+.empty-state { text-align:center; padding: var(--sp-8) var(--sp-4); color: var(--ink-4); font-size: var(--fs-md); border:1.5px dashed var(--line); border-radius: var(--r-md); background: var(--card); }
+
+/* ===== 页脚 ===== */
+.footer {
+  margin: var(--sp-8) 16px 0;
+  text-align:center; font-size: var(--fs-sm); color: var(--ink-4);
+  padding: var(--sp-5) var(--sp-4);
+  background: var(--card); border:1px solid var(--line); border-radius: var(--r-md);
+  box-shadow: var(--shadow-card);
+  line-height:1.9;
+}
+.footer .foot-rule { display:block; width:48px; height:4px; border-radius:2px; background: linear-gradient(90deg, var(--brand), #ff5c77); margin: 0 auto var(--sp-3); }
+.footer a { color: var(--ink-3); text-decoration:none; }
+.footer a:hover { color: var(--brand); }
+
+/* 打印友好 */
 @media print {
   .password-overlay, .history-bar, .section-nav, .quick-hits, .hero { display:none !important; }
   body { background:#fff; padding:0; }
+  .item { box-shadow:none; break-inside:avoid; }
 }
 </style>
+
 </head>
 <body>
-
 <div class="password-overlay" id="pwOverlay">
   <div class="password-brand">DAILY INTELLIGENCE BRIEF</div>
   <div class="password-box" id="pwBox">
@@ -146,9 +422,9 @@ button { font-family:inherit; }
   <div class="date">2026 年 8 月 14 日 · 星期五</div>
   <div class="stats-row">
     <span class="stat-pill"><b>5</b> 大板块</span>
-    <span class="stat-pill"><b>24</b> 条信息</span>
-    <span class="stat-pill"><b>8</b> RSS 源</span>
-    <span class="stat-pill">自动采集</span>
+    <span class="stat-pill"><b>35</b> 条信息</span>
+    <span class="stat-pill"><b>12</b> RSS 源</span>
+    <span class="stat-pill">全网定向采集</span>
   </div>
 </div>
 
@@ -158,11 +434,11 @@ button { font-family:inherit; }
     <div class="qh-more">Quick Hits</div>
   </div>
   <ul class="qh-list">
-    <li><span class="qh-no">01</span><div class="qh-body"><div class="qh-cat">科技速览</div><div class="qh-txt">The premium on originality: Why Hollywood is betting on human stories in the AI era</div></div></li>
+    <li><span class="qh-no">01</span><div class="qh-body"><div class="qh-cat">科技速览</div><div class="qh-txt">Bitmine’s $257M annualized staking income ‘fills’ operational gaps, share buybacks: analysts</div></div></li>
     <li><span class="qh-no">02</span><div class="qh-body"><div class="qh-cat">TikTok 趋势</div><div class="qh-txt">Welcome to summer: The TikTok trends defining the new season</div></div></li>
     <li><span class="qh-no">03</span><div class="qh-body"><div class="qh-cat">电商动态</div><div class="qh-txt">咱们做SLG游戏出海，在像拉美这样的新兴市场，是该优先投入精力搞创新玩法，还是先做好本地化运营来提升下载量呢？</div></div></li>
-    <li><span class="qh-no">04</span><div class="qh-body"><div class="qh-cat">加密货币</div><div class="qh-txt">A World Cup Full of Firsts: How We Built Creator Communications Into Qatar 2022</div></div></li>
-    <li><span class="qh-no">05</span><div class="qh-body"><div class="qh-cat">副业机会</div><div class="qh-txt">运营一批 2020 余万粉丝总量微博账号操控舆论、胁迫艺人“花钱消灾”，多人被抓</div></div></li>
+    <li><span class="qh-no">04</span><div class="qh-body"><div class="qh-cat">加密货币</div><div class="qh-txt">Crypto valuations could double as protocols link revenue to tokens: Bitwise CIO</div></div></li>
+    <li><span class="qh-no">05</span><div class="qh-body"><div class="qh-cat">副业机会</div><div class="qh-txt">Uber Eats送餐员伦敦拦路罢工 抗议“赚钱太少”</div></div></li>
   </ul>
 </div>
 
@@ -180,13 +456,37 @@ button { font-family:inherit; }
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">The premium on originality: Why Hollywood is betting on human stories in the AI era</div>
-      <span class="tag tag-hot">INFLOW Network</span>
+      <div class="item-title">Bitmine’s $257M annualized staking income ‘fills’ operational gaps, share buybacks: analysts</div>
+      <span class="tag tag-hot">Cointelegraph</span>
     </div>
-    <div class="item-desc">&lt;p&gt;The relationship between technology giants and Hollywood is entering a new phase. Contrary to the initial panic, technology companies are not just buying up massive content catalogs to feed their models. Instead, they</div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;Bitmine’s $257M annualized staking income ‘fills’ operational gaps, share buybacks: analysts&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/eth-bitmine.j</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/tech-giants-buying-hollywood-catalogs/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://cointelegraph.com/news/bitmines-257m-staking-income-operational-gaps-share-buybacks?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">NYC council announces probe into ‘predatory marketing practices’ on prediction markets</div>
+      <span class="tag tag-source">Cointelegraph</span>
+    </div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;NYC council announces probe into ‘predatory marketing practices’ on prediction markets&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/hi-us-takes-regulat</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://cointelegraph.com/news/new-york-council-probe-marketing-practices-prediction-markets?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">The premium on originality: Why Hollywood is betting on human stories in the AI era</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;The relationship between technology giants and Hollywood is entering a new phase. Contrary to the initial panic, technology companies are not just buying up massive content catalogs to feed their models. Instead, they are investing directly into studio work</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/tech-giants-buying-hollywood-catalogs/" target="_blank" rel="noopener">原文（INFLOW Network）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -195,10 +495,34 @@ button { font-family:inherit; }
       <div class="item-title">The Americanization of the World Cup: How creators took over the summer of 2026</div>
       <span class="tag tag-source">INFLOW Network</span>
     </div>
-    <div class="item-desc">&lt;p&gt;The biggest sporting event of the decade is currently dominating the digital feed. As the World Cup takes over North America, global brands are abandoning the traditional commercial break. Instead, they are building m</div>
+    <div class="item-desc">&lt;p&gt;The biggest sporting event of the decade is currently dominating the digital feed. As the World Cup takes over North America, global brands are abandoning the traditional commercial break. Instead, they are building massive physical playgrounds specifically</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/americanization-world-cup-2026-creators/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://inflownetwork.com/americanization-world-cup-2026-creators/" target="_blank" rel="noopener">原文（INFLOW Network）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">A World Cup Full of Firsts: How We Built Creator Communications Into Qatar 2022</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;A World Cup comes around once every four years. But being the official voice of one, and not for a single country but for 23, is something that happens once in a lifetime. At the 2022 Qatar World Cup, INFLOW did exactly that. As the tournament’s official ho</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/creator-communications-world-cup-qatar-2022/" target="_blank" rel="noopener">原文（INFLOW Network）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Robinhood Chain nears $1B TVL as Uniswap drives liquidity: Standard Chartered</div>
+      <span class="tag tag-source">Cointelegraph</span>
+    </div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;Robinhood Chain nears $1B TVL as Uniswap drives liquidity: Standard Chartered&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/hi-what-is-robinhood-and-how</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://cointelegraph.com/news/robinhood-chain-uniswap-liquidity-uni-burns?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -207,46 +531,22 @@ button { font-family:inherit; }
       <div class="item-title">The price of trust: Are beauty and health influencers losing their audience?</div>
       <span class="tag tag-source">INFLOW Network</span>
     </div>
-    <div class="item-desc">&lt;p&gt;The digital feed feels highly personal and completely spontaneous. Behind many of those relaxed cosmetic reviews and daily wellness routines is a meticulously planned campaign, a strict legal contract, and frequently </div>
+    <div class="item-desc">&lt;p&gt;The digital feed feels highly personal and completely spontaneous. Behind many of those relaxed cosmetic reviews and daily wellness routines is a meticulously planned campaign, a strict legal contract, and frequently a seven figure fee. As influencer market</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/beauty-health-influencers-trust-crisis/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://inflownetwork.com/beauty-health-influencers-trust-crisis/" target="_blank" rel="noopener">原文（INFLOW Network）</a>
+      · 自动采集
     </div>
   </div>
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">The new creator reality: Why the traditional influencer model is breaking</div>
-      <span class="tag tag-source">INFLOW Network</span>
+      <div class="item-title">ASX shareholder plans to sue former directors over failed blockchain project</div>
+      <span class="tag tag-source">Cointelegraph</span>
     </div>
-    <div class="item-desc">&lt;p&gt;The creator economy is experiencing a massive structural shift. While the global market value continues to grow rapidly, the daily reality for digital talent and consumers feels increasingly strained. Audiences are su</div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;ASX shareholder plans to sue former directors over failed blockchain project &quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/courtroom-court-lawsuit-just</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/traditional-influencer-model-breaking/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
-    </div>
-  </div>
-
-  <div class="item">
-    <div class="item-header">
-      <div class="item-title">早报｜9999起，荣耀Robot Phone发布/Google发布Pixel 11系列/岚图董事长卢放:开发周期短不等于「速成车」</div>
-      <span class="tag tag-source">爱范儿</span>
-    </div>
-    <div class="item-desc">· 抖音处置 1.28 万条台风不实内容，重点治理 AI 虚构灾害画面 · 激进投资者要求狮门影业加速 AI 转型，否则考虑出售 · 面壁智能启动 IPO 辅导&lt;p&gt;#欢迎关注爱范儿官方微信公众号：爱范儿（微信号：ifanr），更多精彩内容第一时间为您奉上。&lt;/p&gt;</div>
-    <div class="item-meta">
-      <a class="source-link" href="https://www.ifanr.com/1674986?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
-    </div>
-  </div>
-
-  <div class="item">
-    <div class="item-header">
-      <div class="item-title">任天堂 Switch 2 游戏《宝可梦 Pokopia》销量超 500 万，今年晚些时候推出第二弹 DLC</div>
-      <span class="tag tag-source">IT之家</span>
-    </div>
-    <div class="item-desc">&lt;p&gt;IT之家 8 月 14 日消息，任天堂与宝可梦公司联合宣布，旗下游戏《宝可梦 Pokopia》自 2026 年 3 月 5 日发售以来，仅过去四个多月，其全球实体版与数字版的&lt;strong&gt;累计销量已突破 500 万份&lt;/strong&gt;。该作由任天堂 Switch 2 主机独占。&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;img class=&quot;no-alt-img&quot; src=&quot;https://img.i</div>
-    <div class="item-meta">
-      <a class="source-link" href="https://www.ithome.com/0/989/526.htm" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://cointelegraph.com/news/asx-shareholder-lawsuit-failed-blockchain-chess-project?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -254,17 +554,17 @@ button { font-family:inherit; }
 
 <!-- ===== TikTok 趋势 ===== -->
 <div class="section" id="sec2">
-  <div class="section-title"><span class="sec-no">二</span><span class="icon">🎬</span> TikTok 趋势<span class="sec-line"></span></div>
+  <div class="section-title"><span class="sec-no">二</span><span class="icon">🔥</span> TikTok 趋势<span class="sec-line"></span></div>
 
   <div class="item">
     <div class="item-header">
       <div class="item-title">Welcome to summer: The TikTok trends defining the new season</div>
       <span class="tag tag-hot">INFLOW Network</span>
     </div>
-    <div class="item-desc">&lt;p&gt;The algorithm is officially transitioning into summer mode. As the weather warms up, the For You Page is experiencing a massive shift in tone. Right now, the feed is balancing aspirational travel aesthetics with synth</div>
+    <div class="item-desc">&lt;p&gt;The algorithm is officially transitioning into summer mode. As the weather warms up, the For You Page is experiencing a massive shift in tone. Right now, the feed is balancing aspirational travel aesthetics with synthetic absurdity and highly relatable humo</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/welcome-to-summer-the-tiktok-trends-defining-the-new-season/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://inflownetwork.com/welcome-to-summer-the-tiktok-trends-defining-the-new-season/" target="_blank" rel="noopener">原文（INFLOW Network）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -273,10 +573,10 @@ button { font-family:inherit; }
       <div class="item-title">Welcome to August: The TikTok trends shifting the summer</div>
       <span class="tag tag-source">INFLOW Network</span>
     </div>
-    <div class="item-desc">&lt;p&gt;The TikTok algorithm is officially shifting into high gear for August. As the summer reaches its peak, the For You Page is balancing frantic audio cues, post World Cup sports fever, and high energy choreography. Here </div>
+    <div class="item-desc">&lt;p&gt;The TikTok algorithm is officially shifting into high gear for August. As the summer reaches its peak, the For You Page is balancing frantic audio cues, post World Cup sports fever, and high energy choreography. Here are the primary movements taking over Ti</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/tiktok-trends-august-2026/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://inflownetwork.com/tiktok-trends-august-2026/" target="_blank" rel="noopener">原文（INFLOW Network）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -285,46 +585,58 @@ button { font-family:inherit; }
       <div class="item-title">Entering July: The heart of summer excitement on TikTok</div>
       <span class="tag tag-source">INFLOW Network</span>
     </div>
-    <div class="item-desc">&lt;p&gt;As we enter July, the heart of summer excitement beats entirely on TikTok. The algorithm is fully embracing the season, balancing bizarre synthetic humor, global sports fever, and rapid fashion curation. Here are the </div>
+    <div class="item-desc">&lt;p&gt;As we enter July, the heart of summer excitement beats entirely on TikTok. The algorithm is fully embracing the season, balancing bizarre synthetic humor, global sports fever, and rapid fashion curation. Here are the primary video formats taking over the pl</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/tiktok-trends-july-2026/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://inflownetwork.com/tiktok-trends-july-2026/" target="_blank" rel="noopener">原文（INFLOW Network）</a>
+      · 自动采集
     </div>
   </div>
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">Temu在欧洲推‘砍一刀’引发热潮，其他跨境电商跟风做却没效果，问题出在哪？</div>
-      <span class="tag tag-source">白鲸出海</span>
+      <div class="item-title">45秒汽修广告直接成片！LibTV Agent 把 Skill Hub 搬进视频工作流！</div>
+      <span class="tag tag-source">人人都是产品经理</span>
     </div>
-    <div class="item-desc">跨境电商出海欧洲市场竞争激烈，营销玩法创新是一大难题。Temu推出‘砍一刀’社交裂变玩法，成功提升了平台流量和销售额，但不少同行跟风后却效果不佳。这一模式虽在国内成熟，但在欧洲面临社交隐私等争议。那其他跨境电商跟风失败的原因究竟是什么呢？</div>
+    <div class="item-desc">&lt;blockquote&gt;&lt;p&gt;最近做短视频比较多，而且对质感要求很高，用LibTV实测 3 个真实任务场景，说实话，镜哥最直接的感受是，LibTV 把专业视频方法、Skills 驱动剪辑和Agent后续修改接到了一起， 不仅轻松做出导演大片质感，创作效率也大幅提升。&lt;/p&gt; &lt;/blockquote&gt;&lt;p&gt;&lt;img class=&quot;aligncenter&quot; src=&quot;https://image.woshipm.com/2023/04/13/ae12b866-d9de-11ed-8d63-00163e0b5ff3.jp</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.baijing.cn/question/638468" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.woshipm.com/ai/6446347.html" target="_blank" rel="noopener">原文（人人都是产品经理）</a>
+      · 自动采集
     </div>
   </div>
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">Temu靠性价比挑战亚马逊，咱们中小跨境电商企业该跟进低价策略还是另寻出路？</div>
-      <span class="tag tag-source">白鲸出海</span>
+      <div class="item-title">我用Dify+飞书，实现了达人视频主推品全链路自动化分析（落地实战分享）</div>
+      <span class="tag tag-source">人人都是产品经理</span>
     </div>
-    <div class="item-desc">在跨境电商领域，亚马逊长期占据主导地位。但近期Temu凭借超高性价比策略，在美国市场份额持续攀升，对亚马逊构成挑战。这让众多中小跨境电商企业犯了难，是跟着打价格战，还是另想办法突出重围呢？该如何抉择才好？</div>
+    <div class="item-desc">&lt;blockquote&gt;&lt;p&gt;面对每天2000条达人视频的审核压力，一套基于Dify和飞书多维表格的自动化系统应运而生。它不仅能识别主推套餐，还通过三套自动化协同，实现了批量处理、规则动态更新与结果自动反馈，将业务从繁琐的人工审核中解放出来。本文深入拆解了从需求分析到系统落地的全过程，展示了AI在真实业务场景中的高效应用。&lt;/p&gt; &lt;/blockquote&gt;&lt;p&gt;&lt;img class=&quot;aligncenter&quot; src=&quot;https://image.woshipm.com/2023/04/13/2810016a-d</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.baijing.cn/question/638462" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.woshipm.com/ai/6446186.html" target="_blank" rel="noopener">原文（人人都是产品经理）</a>
+      · 自动采集
     </div>
   </div>
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">我们中小跨境电商没Temu那么多营销预算，咋靠低价策略在美国市场分一杯羹？</div>
-      <span class="tag tag-source">白鲸出海</span>
+      <div class="item-title">腾讯阿里“放弃”争夺广大群众的代价</div>
+      <span class="tag tag-source">人人都是产品经理</span>
     </div>
-    <div class="item-desc">跨境电商竞争激烈，Temu在美国靠低价策略、持续营销投入和高效供应链管理，销售额再创新高。但咱们中小跨境电商没那么多营销预算，也想靠低价策略在美国市场有所斩获，该咋做呢？怎样才能突破资金限制，走出自己的低价营销之路呢？</div>
+    <div class="item-desc">&lt;blockquote&gt;&lt;p&gt;腾讯和阿里股价低迷的根源，或许在于它们“放弃”了对广大群众的争夺。当字节跳动凭借抖音、番茄小说、红果短剧等产品，不断收割下沉市场、碎片时间与即时娱乐需求时，腾讯和阿里却错失了一次次机会。本文从用户时长争夺的视角，剖析两家巨头在AI时代面临的真正挑战。&lt;/p&gt; &lt;/blockquote&gt;&lt;p&gt;&lt;img class=&quot;aligncenter&quot; src=&quot;https://image.woshipm.com/2024/10/31/5301697a-972b-11ef-8da6-00163e14</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.baijing.cn/question/638455" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.woshipm.com/it/6446545.html" target="_blank" rel="noopener">原文（人人都是产品经理）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">豆包打通抖音，不是GEO的狂欢</div>
+      <span class="tag tag-source">人人都是产品经理</span>
+    </div>
+    <div class="item-desc">&lt;blockquote&gt;&lt;p&gt;豆包打通抖音电商，引发GEO优化热潮，但AI推荐的核心并非文本优化，而是平台积累的体验分与交易数据。本文拆解AI电商的真实逻辑，揭示其本质仍是搜索电商的升级，提醒卖家回归商业常识，别交智商税。&lt;/p&gt; &lt;/blockquote&gt;&lt;p&gt;&lt;img class=&quot;aligncenter&quot; src=&quot;https://image.woshipm.com/2024/03/08/8e27e56a-dd31-11ee-9846-00163e142b65.png&quot; /&gt;&lt;/p&gt; &lt;p&gt;最近圈子里有个事儿</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.woshipm.com/ai/6446563.html" target="_blank" rel="noopener">原文（人人都是产品经理）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -341,8 +653,8 @@ button { font-family:inherit; }
     </div>
     <div class="item-desc">在游戏出海领域，新兴市场蕴含着巨大潜力，但也充满挑战。最近一款SLG游戏在拉美市场凭借创新玩法和本地化运营爆火。对于众多出海的SLG游戏企业来说，面临着资源有限的情况，到底是先把宝押在创新玩法上，还是先做好本地化运营，这成了一个纠结点。该如何抉择呢？</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.baijing.cn/question/638408" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.baijing.cn/question/638408" target="_blank" rel="noopener">原文（白鲸出海）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -351,10 +663,10 @@ button { font-family:inherit; }
       <div class="item-title">OPPO Watch X3 Mini 智能手表「粉黛海」配色开售，国补价 2124.15 元</div>
       <span class="tag tag-source">IT之家</span>
     </div>
-    <div class="item-desc">&lt;p&gt;IT之家 8 月 14 日消息，OPPO Watch X3 Mini 智能手表「粉黛海」配色今日开售，官方标价 2499 元，国补价 2124.15 元，京东券后 2349 元。&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;img class=&quot;no-alt-img&quot; src=&quot;https://img.ithome.com/newsuploadfiles/2026/8/3a85b33f-92ad-4ae8</div>
+    <div class="item-desc">&lt;p&gt;IT之家 8 月 14 日消息，OPPO Watch X3 Mini 智能手表「粉黛海」配色今日开售，官方标价 2499 元，国补价 2124.15 元，京东券后 2349 元。&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;img class=&quot;no-alt-img&quot; src=&quot;https://img.ithome.com/newsuploadfiles/2026/8/3a85b33f-92ad-4ae8-971e-c7de7d623b23.jpg?x-bce-process=ima</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.ithome.com/0/989/548.htm" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.ithome.com/0/989/548.htm" target="_blank" rel="noopener">原文（IT之家）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -365,8 +677,8 @@ button { font-family:inherit; }
     </div>
     <div class="item-desc">当下，东南亚地区互联网用户增长迅猛，给应用出海缔造了广阔空间。不少工具类和社交类应用在该地区成绩亮眼，这也引得国内应用企业纷纷加大投入。不过，工具类和社交类应用各有特点和市场需求，那怎么平衡这两类应用的投入比例，才能让利益最大化呢？这成了企业的一大困扰。</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.baijing.cn/question/638440" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.baijing.cn/question/638440" target="_blank" rel="noopener">原文（白鲸出海）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -377,8 +689,8 @@ button { font-family:inherit; }
     </div>
     <div class="item-desc">在游戏出海领域，买量策略一直是大家关注的重点。很多出海企业在买量上投入巨大，但效果参差不齐。某知名游戏厂商针对不同地区用户特点，优化买量素材和投放渠道，48 小时内旗下手游在欧美市场下载量和收入显著提升。这种做法真的能普遍适用吗？</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.baijing.cn/question/638432" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.baijing.cn/question/638432" target="_blank" rel="noopener">原文（白鲸出海）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -387,10 +699,10 @@ button { font-family:inherit; }
       <div class="item-title">小米米家高速水离子 Pro 单机版开售：12 万转 / 分钟高速马达，539.4 元起</div>
       <span class="tag tag-source">IT之家</span>
     </div>
-    <div class="item-desc">&lt;p&gt;IT之家 8 月 14 日消息，小米智能生态今日宣布，米家高速水离子 Pro 单机版现已开售。京东平台官方标价 705 元，国补到手价 539.4 元起。&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;img class=&quot;no-alt-img&quot; src=&quot;https://qimg.ithome.com/newfiles/2026/8/021a07ba-87f8-423c-a212-3f3d79962f95</div>
+    <div class="item-desc">&lt;p&gt;IT之家 8 月 14 日消息，小米智能生态今日宣布，米家高速水离子 Pro 单机版现已开售。京东平台官方标价 705 元，国补到手价 539.4 元起。&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;img class=&quot;no-alt-img&quot; src=&quot;https://qimg.ithome.com/newfiles/2026/8/021a07ba-87f8-423c-a212-3f3d79962f95.png&quot; /&gt;&lt;/p&gt;&lt;p&gt;该机提供&lt;strong&gt;茶岩灰、浅月白、柔金粉&lt;/</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.ithome.com/0/989/580.htm" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.ithome.com/0/989/580.htm" target="_blank" rel="noopener">原文（IT之家）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -399,10 +711,34 @@ button { font-family:inherit; }
       <div class="item-title">国产游戏《影之刃零》实体收藏版礼盒开启预约：定价 1199 元，限量 2 万套</div>
       <span class="tag tag-source">IT之家</span>
     </div>
-    <div class="item-desc">&lt;p&gt;IT之家 8 月 14 日消息，《影之刃零》实体收藏版礼盒今日宣布在“影之刃零京东自营旗舰店”开启预约，&lt;strong&gt;定价 1,199 元，限量 2 万套&lt;/strong&gt;。&lt;/p&gt;&lt;p&gt;礼盒中包含：&lt;/p&gt;&lt;ul class=&quot; list-paddingleft-2&quot;&gt;&lt;li&gt;&lt;p&gt;《影之刃零》WeGame 数字豪华版激活码&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;主角模型&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;“烈焰狮头”项链&lt;/p&gt;&lt;/li</div>
+    <div class="item-desc">&lt;p&gt;IT之家 8 月 14 日消息，《影之刃零》实体收藏版礼盒今日宣布在“影之刃零京东自营旗舰店”开启预约，&lt;strong&gt;定价 1,199 元，限量 2 万套&lt;/strong&gt;。&lt;/p&gt;&lt;p&gt;礼盒中包含：&lt;/p&gt;&lt;ul class=&quot; list-paddingleft-2&quot;&gt;&lt;li&gt;&lt;p&gt;《影之刃零》WeGame 数字豪华版激活码&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;主角模型&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;“烈焰狮头”项链&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;“白蟒赤炼”钥匙扣&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;“兵器谱”&lt;/</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.ithome.com/0/989/594.htm" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.ithome.com/0/989/594.htm" target="_blank" rel="noopener">原文（IT之家）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Temu在欧洲推‘砍一刀’引发热潮，其他跨境电商跟风做却没效果，问题出在哪？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">跨境电商出海欧洲市场竞争激烈，营销玩法创新是一大难题。Temu推出‘砍一刀’社交裂变玩法，成功提升了平台流量和销售额，但不少同行跟风后却效果不佳。这一模式虽在国内成熟，但在欧洲面临社交隐私等争议。那其他跨境电商跟风失败的原因究竟是什么呢？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638468" target="_blank" rel="noopener">原文（白鲸出海）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Temu靠性价比挑战亚马逊，咱们中小跨境电商企业该跟进低价策略还是另寻出路？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">在跨境电商领域，亚马逊长期占据主导地位。但近期Temu凭借超高性价比策略，在美国市场份额持续攀升，对亚马逊构成挑战。这让众多中小跨境电商企业犯了难，是跟着打价格战，还是另想办法突出重围呢？该如何抉择才好？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638462" target="_blank" rel="noopener">原文（白鲸出海）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -414,37 +750,97 @@ button { font-family:inherit; }
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">A World Cup Full of Firsts: How We Built Creator Communications Into Qatar 2022</div>
-      <span class="tag tag-hot">INFLOW Network</span>
+      <div class="item-title">Crypto valuations could double as protocols link revenue to tokens: Bitwise CIO</div>
+      <span class="tag tag-hot">Cointelegraph</span>
     </div>
-    <div class="item-desc">&lt;p&gt;A World Cup comes around once every four years. But being the official voice of one, and not for a single country but for 23, is something that happens once in a lifetime. At the 2022 Qatar World Cup, INFLOW did exact</div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;Crypto valuations could double as protocols link revenue to tokens: Bitwise CIO &quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/hi-defi-revolution-during</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/creator-communications-world-cup-qatar-2022/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://cointelegraph.com/news/crypto-valuations-protocol-revenue-token-buybacks?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
     </div>
   </div>
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">Welcome to August: The Instagram trends defining the summer heat</div>
-      <span class="tag tag-source">INFLOW Network</span>
+      <div class="item-title">Bitcoin keeps traders guessing near $64K as stocks gain on cool US PPI data</div>
+      <span class="tag tag-source">Cointelegraph</span>
     </div>
-    <div class="item-desc">&lt;p&gt;The algorithm is officially transitioning into peak summer mode. As we enter August, the Instagram feed is experiencing a massive wave of summer heat. Right now, the platform is balancing deep emotional nostalgia with</div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;Bitcoin keeps traders guessing near $64K as stocks gain on cool US PPI data&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/hi-budget-research-crypto-curr</div>
     <div class="item-meta">
-      <a class="source-link" href="https://inflownetwork.com/instagram-trends-august-2026/" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://cointelegraph.com/markets/bitcoin-keeps-traders-guessing-near-64k-as-stocks-gain-on-cool-us-ppi-data?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
     </div>
   </div>
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">区块链是互联网技术补丁 需推动与实体经济深度融合</div>
-      <span class="tag tag-source">新浪科技</span>
+      <div class="item-title">Delio CEO sentenced to 15 years in prison on crypto fraud in South Korea</div>
+      <span class="tag tag-source">Cointelegraph</span>
     </div>
-    <div class="item-desc">原标题：中国信通院魏凯：区块链是互联网技术补丁，需推动区块链与实体经济深度融合 作者：链得得潘璇 2018年5月，中国信息通信研究院工信部信息中心正式发布《2018年中国区块链产业发展白皮书》，数据显示，我国以区块链为主营业务的公司达456家。 2018年9月，在....</div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;Delio CEO sentenced to 15 years in prison on crypto fraud in South Korea&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/arrest-police-crime-prison-jail-i</div>
     <div class="item-meta">
-      <a class="source-link" href="http://go.rss.sina.com.cn/redirect.php?url=https://tech.sina.com.cn/i/2018-09-23/doc-ihkmwytn6810289.shtml" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://cointelegraph.com/news/delio-ceo-prison-crypto-fraud-south-korea?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Metaplanet CEO shuts down Bitcoin sale speculation after $322M transfer</div>
+      <span class="tag tag-source">Cointelegraph</span>
+    </div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;Metaplanet CEO shuts down Bitcoin sale speculation after $322M transfer&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/hi-defi-wont-last-long-without-unl</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://cointelegraph.com/news/gerovich-shuts-down-bitcoin-sale-metaplanets-transfer?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">CFTC to join SEC in exploring crypto regulations without CLARITY bill</div>
+      <span class="tag tag-source">Cointelegraph</span>
+    </div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;CFTC to join SEC in exploring crypto regulations without CLARITY bill&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/paper-document-man-office-cftc-1.jpg</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://cointelegraph.com/news/cftc-exploring-crypto-regulations-clarity-act?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Binance bStocks pass xStocks as second-largest tokenized stock issuer</div>
+      <span class="tag tag-source">Cointelegraph</span>
+    </div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;Binance bStocks pass xStocks as second-largest tokenized stock issuer&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/hi-how-binance-plans-to-bring-tokeni</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://cointelegraph.com/news/binance-bstocks-second-largest-tokenized-stock-issuer?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Crypto group backs Custodia in Supreme Court battle over Fed access</div>
+      <span class="tag tag-source">Cointelegraph</span>
+    </div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;Crypto group backs Custodia in Supreme Court battle over Fed access&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/hi-us-crypto-reserve-asset-bill-explai</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://cointelegraph.com/news/blockchain-association-backs-custodia-in-supreme-court-fight-over-fed-master-account?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">SEC allows Franklin Templeton funds to invest in onchain money fund</div>
+      <span class="tag tag-source">Cointelegraph</span>
+    </div>
+    <div class="item-desc">&lt;p style=&quot;float: right; margin: 0 0 10px 15px; width: 240px;&quot;&gt;&lt;img alt=&quot;SEC allows Franklin Templeton funds to invest in onchain money fund&quot; class=&quot;type:primaryImage&quot; src=&quot;https://s3-images.ctmedia.io/media/article-covers/rwa.jpg&quot; /&gt;&lt;/p&gt;&lt;p&gt;The SEC said it will</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://cointelegraph.com/news/sec-franklin-templeton-funds-invest-onchain-money-fund?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">原文（Cointelegraph）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -456,25 +852,13 @@ button { font-family:inherit; }
 
   <div class="item">
     <div class="item-header">
-      <div class="item-title">运营一批 2020 余万粉丝总量微博账号操控舆论、胁迫艺人“花钱消灾”，多人被抓</div>
-      <span class="tag tag-hot">IT之家</span>
-    </div>
-    <div class="item-desc">&lt;p&gt;IT之家 8 月 14 日消息，据新华社 8 月 13 日报道，杭州市公安局临安区分局日前侦破一起&lt;strong&gt;以“护剧”为名实施舆情敲诈勒索案件&lt;/strong&gt;，打掉一个依托自媒体账号操控舆论、胁迫影视剧组和艺人“花钱消灾”的职业化犯罪团伙。&lt;/p&gt;&lt;p&gt;5 月初，杭州网警在日常工作中发现，&lt;strong&gt;多个自媒体账号在影视剧上线宣发节点集中发布负面内容&lt;/strong&gt;，待舆情发酵后又快速删除。经深入侦查，一个以李某、廖</div>
-    <div class="item-meta">
-      <a class="source-link" href="https://www.ithome.com/0/989/535.htm" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
-    </div>
-  </div>
-
-  <div class="item">
-    <div class="item-header">
       <div class="item-title">Uber Eats送餐员伦敦拦路罢工 抗议“赚钱太少”</div>
-      <span class="tag tag-source">新浪科技</span>
+      <span class="tag tag-hot">新浪科技</span>
     </div>
     <div class="item-desc">来源：界面 作者：Chris Baynes 翻译：王慧男 这两天，伦敦有上百名Uber Eats送餐员没有接单，而是在市内拦路罢工，抗议报酬太低。 这些摩托车和电动自行车骑手连续第二天来到奥德门东站的Uber Eats英国总部，堵住大楼外的马路以示抗议。他们认为，Uber Eats削减....</div>
     <div class="item-meta">
-      <a class="source-link" href="http://go.rss.sina.com.cn/redirect.php?url=https://tech.sina.com.cn/i/2018-09-23/doc-ihkmwytn6897848.shtml" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="http://go.rss.sina.com.cn/redirect.php?url=https://tech.sina.com.cn/i/2018-09-23/doc-ihkmwytn6897848.shtml" target="_blank" rel="noopener">原文（新浪科技）</a>
+      · 自动采集
     </div>
   </div>
 
@@ -485,24 +869,50 @@ button { font-family:inherit; }
     </div>
     <div class="item-desc">进了 Meta，Manus 怎么又独立了？&lt;p&gt;#欢迎关注爱范儿官方微信公众号：爱范儿（微信号：ifanr），更多精彩内容第一时间为您奉上。&lt;/p&gt;</div>
     <div class="item-meta">
-      <a class="source-link" href="https://www.ifanr.com/1674998?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener">原文链接 ↗</a>
-      · 来自 RSS 自动采集
+      <a class="source-link" href="https://www.ifanr.com/1674998?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener">原文（爱范儿）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">社区团购：乱纪元下，一场草根逆袭的典型范本</div>
+      <span class="tag tag-source">人人都是产品经理</span>
+    </div>
+    <div class="item-desc">&lt;blockquote&gt;&lt;p&gt;当流量红利见顶、资本退潮，社区团购却以轻资产模式在巨头夹缝中逆势崛起。本文深入剖析其背后的商业逻辑：团长信任、供应链重塑与本地化运营，揭示草根力量如何在商业乱纪元中实现逆袭，为创业者提供生存法则。&lt;/p&gt; &lt;/blockquote&gt;&lt;p&gt;&lt;img class=&quot;aligncenter&quot; src=&quot;https://image.woshipm.com/2023/04/13/85b1c13a-d9ea-11ed-bd74-00163e0b5ff3.jpg&quot; /&gt;&lt;/p&gt; &lt;p&gt;过去几年，中国</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.woshipm.com/it/6446530.html" target="_blank" rel="noopener">原文（人人都是产品经理）</a>
+      · 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">「亚马逊VC」 分销平台实践</div>
+      <span class="tag tag-source">人人都是产品经理</span>
+    </div>
+    <div class="item-desc">&lt;blockquote&gt;&lt;p&gt;亚马逊VC分销模式正成为卖家多渠道布局的新选择，但其背后隐藏着货权、库存、履约与合规的多重风险。本文深度拆解VC分销平台的业务流程、盈利模式及与商家、渠道间的博弈，揭示规模增长下的风险挑战，为卖家提供合规经营的关键思路。&lt;/p&gt; &lt;/blockquote&gt;&lt;p&gt;&lt;img class=&quot;aligncenter&quot; src=&quot;https://image.woshipm.com/2023/04/13/60ef84e2-d9de-11ed-8440-00163e0b5ff3.jpg&quot; /&gt;&lt;/p</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.woshipm.com/operate/6445269.html" target="_blank" rel="noopener">原文（人人都是产品经理）</a>
+      · 自动采集
     </div>
   </div>
 
 </div>
 
 
-<div class="footer-note">
-  数据源: IT之家 / 爱范儿 / 少数派 / 新浪科技 / 阮一峰的网络日志 / INFLOW Network / 白鲸出海 / Odaily星球日报
+<div class="footer">
+  <span class="foot-rule"></span>
+  数据源：IT之家 / 爱范儿 / 少数派 / 新浪科技 / 36氪 / 人人都是产品经理 / 阮一峰的网络日志 / INFLOW Network / 白鲸出海 / 雨果跨境 / Cointelegraph / 优设网<br>
+  每日情报简报 · 自动构建
 </div>
-
 </div>
 
 <script>
 const PASSWORD = "123567";
 const BRIEFS = [{"date": "2026-08-14", "label": "2026 年 8 月 14 日 · 星期五"}];
 
+// ====== 密码验证 ======
 const pwOverlay = document.getElementById('pwOverlay');
 const pwBox = document.getElementById('pwBox');
 const pwInput = document.getElementById('pwInput');
@@ -521,13 +931,15 @@ function checkPassword() {
   } else {
     pwError.classList.add('show');
     pwBox.classList.remove('shake');
-    void pwBox.offsetWidth;
+    void pwBox.offsetWidth; // 重启动画
     pwBox.classList.add('shake');
     pwInput.value = '';
     pwInput.focus();
   }
 }
-pwInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkPassword(); });
+pwInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkPassword();
+});
 document.getElementById('pwBtn').addEventListener('click', checkPassword);
 pwToggle.addEventListener('click', function() {
   const isPw = pwInput.type === 'password';
@@ -535,8 +947,10 @@ pwToggle.addEventListener('click', function() {
   pwToggle.textContent = isPw ? '🙈' : '👁';
   pwInput.focus();
 });
+// 输入时清除错误提示
 pwInput.addEventListener('input', function() { pwError.classList.remove('show'); });
 
+// ====== 历史翻阅 ======
 function initHistoryBar() {
   const select = document.getElementById('dateSelect');
   if (!BRIEFS.length) {
@@ -554,6 +968,7 @@ function initHistoryBar() {
   select.addEventListener('change', function() { updateNavButtons(); });
   document.getElementById('btnPrev').addEventListener('click', () => navigate(-1));
   document.getElementById('btnNext').addEventListener('click', () => navigate(1));
+  // 当天提示 chip
   const today = new Date();
   const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
   if (BRIEFS.some(b => b.date === todayStr)) todayChip.style.display = 'inline-block';
@@ -572,8 +987,10 @@ function updateNavButtons() {
   document.getElementById('btnPrev').disabled = idx <= 0;
   document.getElementById('btnNext').disabled = idx >= BRIEFS.length - 1;
 }
-pwOverlay.addEventListener('click', function(e) { if (e.target === pwOverlay) pwInput.focus(); });
+// 点击遮罩空白处自动聚焦输入框
+pwOverlay.addEventListener('click', function(e) {
+  if (e.target === pwOverlay) pwInput.focus();
+});
 </script>
-
 </body>
 </html>
