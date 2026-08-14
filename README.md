@@ -34,3 +34,4 @@ python build_brief.py --date 20260814 --out ../public/index.html --briefs-json .
 - 板块：科技速览 / TikTok 趋势 / 电商动态 / 加密货币 / 副业机会。
 - 采集源均为公开 RSS（IT之家 / 36氪 / 少数派 / 阮一峰 / Odaily / CoinDesk），国内网络可直连。
 - 每次运行将当日日期写入 `data/briefs.json` 并自动提交，页面内置 BRIEFS 数组实现历史翻阅。
+*（内容由AI生成，仅供参考）*
