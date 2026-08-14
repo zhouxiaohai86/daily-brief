@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>每日情报简报 · 2026 年 8 月 14 日 · 星期五</title>
+<style>
+:root {
+  --bg:#eef0f4; --bg-soft:#e7eaf0; --card:#fff;
+  --ink:#111827; --ink-2:#374151; --ink-3:#6b7280; --ink-4:#9ca3af;
+  --brand:#c41e3a; --brand-2:#a01830; --brand-soft:#fdeef0;
+  --hero1:#161a2b; --hero2:#232845; --hero3:#3a1c33;
+  --line:#e5e7eb; --line-soft:#f0f1f4; --link:#1d4ed8;
+  --ok:#059669; --warn:#d97706; --danger:#dc2626;
+  --tag-source-bg:#eef2ff; --tag-source-fg:#4338ca;
+  --tag-rpm-bg:#ecfdf5; --tag-rpm-fg:#047857;
+  --tag-warn-bg:#fef2f2; --tag-warn-fg:#b91c1c;
+  --tag-hot-bg:#fffbeb; --tag-hot-fg:#b45309;
+  --tag-info-bg:#f3f4f6; --tag-info-fg:#4b5563;
+  --fs-xs:11px; --fs-sm:12.5px; --fs-md:13.5px; --fs-body:15px; --fs-lg:16.5px; --fs-xl:19px; --fs-2xl:24px; --fs-3xl:30px;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-8:32px;
+  --r-sm:8px; --r-md:14px; --r-lg:20px;
+  --shadow-card:0 1px 2px rgba(17,24,39,.04),0 4px 14px rgba(17,24,39,.05);
+  --shadow-pop:0 12px 40px rgba(17,24,39,.16);
+  --shadow-hero:0 12px 32px rgba(22,26,43,.28);
+  --t-fast:150ms ease; --t-base:260ms cubic-bezier(.4,0,.2,1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:64px; }
+body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif; line-height:1.75; font-size:var(--fs-body); padding:0 0 56px; -webkit-text-size-adjust:100%; }
+a { color:inherit; text-decoration:none; }
+button { font-family:inherit; }
+.hidden { display:none !important; }
+
+.password-overlay { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 30% 20%, rgba(196,30,58,.28), transparent 45%), linear-gradient(160deg, var(--hero1), var(--hero2) 55%, var(--hero3)); }
+.password-brand { position:absolute; top:48px; letter-spacing:4px; font-size:var(--fs-sm); color:rgba(255,255,255,.55); }
+.password-box { width:min(340px, 86vw); background:rgba(255,255,255,.97); border-radius:var(--r-lg); padding:40px 28px 28px; text-align:center; box-shadow:var(--shadow-pop); backdrop-filter:blur(6px); }
+.password-box h2 { font-size:var(--fs-xl); margin-bottom:4px; color:var(--ink); }
+.password-box .sub { color:var(--ink-3); font-size:var(--fs-sm); margin-bottom:24px; }
+.pw-field { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:16px; }
+.pw-field input { width:180px; padding:12px 14px; border:1px solid var(--line); border-radius:var(--r-md); text-align:center; letter-spacing:6px; font-size:var(--fs-lg); }
+.pw-field input:focus { border-color:var(--brand); outline:none; }
+.pw-toggle { border:none; background:transparent; font-size:18px; cursor:pointer; }
+#pwBtn { width:100%; padding:13px; border:none; border-radius:var(--r-md); background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:#fff; font-size:var(--fs-body); font-weight:600; cursor:pointer; box-shadow:0 8px 20px rgba(196,30,58,.32); transition:var(--t-fast); }
+#pwBtn:hover { transform:translateY(-1px); box-shadow:0 10px 22px rgba(196,30,58,.38); }
+.error { display:none; color:var(--danger); font-size:var(--fs-sm); margin-top:12px; }
+.error.show { display:block; }
+.pw-hint { margin-top:14px; color:var(--ink-4); font-size:var(--fs-xs); }
+.shake { animation:shake .4s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.history-bar { position:sticky; top:0; z-index:100; display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(238,240,244,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+.nav-btn { padding:8px 14px; border:1px solid var(--line); border-radius:var(--r-md); background:var(--card); color:var(--ink-2); font-size:var(--fs-sm); cursor:pointer; }
+.nav-btn:disabled { opacity:.4; cursor:not-allowed; }
+#dateSelect { flex:1; min-width:0; padding:8px 10px; border:1px solid var(--line); border-radius:var(--r-md); background:var(--card); font-size:var(--fs-sm); color:var(--ink); }
+.today-chip { display:none; padding:4px 10px; border-radius:999px; background:var(--brand-soft); color:var(--brand); font-size:var(--fs-xs); font-weight:600; }
+
+.main-content { max-width:750px; margin:0 auto; padding:0 16px; }
+.hero { margin:16px 0 0; padding:36px 22px 30px; border-radius:var(--r-lg); background:linear-gradient(135deg, var(--hero1), var(--hero2) 55%, var(--hero3)); color:#fff; box-shadow:var(--shadow-hero); }
+.hero-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.hero-kicker { letter-spacing:3px; font-size:var(--fs-xs); color:rgba(255,255,255,.6); }
+.hero-live { padding:4px 10px; border-radius:999px; background:rgba(255,255,255,.14); font-size:var(--fs-xs); }
+.hero h1 { font-size:var(--fs-3xl); margin-bottom:6px; }
+.hero h1 .accent { color:#ff8a9a; }
+.hero .date { color:rgba(255,255,255,.75); font-size:var(--fs-md); margin-bottom:16px; }
+.stats-row { display:flex; flex-wrap:wrap; gap:8px; }
+.stat-pill { padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.12); font-size:var(--fs-sm); }
+.stat-pill b { color:#ffd9a0; }
+
+.quick-hits { margin:-20px 8px 0; position:relative; background:var(--card); border-radius:var(--r-lg); box-shadow:var(--shadow-pop); padding:18px 18px 8px; }
+.qh-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.qh-title { font-weight:700; font-size:var(--fs-lg); position:relative; padding-left:12px; }
+.qh-title::before { content:""; position:absolute; left:0; top:4px; bottom:4px; width:4px; border-radius:2px; background:linear-gradient(var(--brand), #ff5c77); }
+.qh-more { color:var(--ink-4); font-size:var(--fs-xs); letter-spacing:1px; }
+.qh-list { list-style:none; }
+.qh-list li { display:flex; gap:10px; padding:9px 0; border-bottom:1px solid var(--line-soft); }
+.qh-list li:last-child { border-bottom:none; }
+.qh-no { font-weight:700; color:var(--brand); font-size:var(--fs-sm); }
+.qh-cat { font-size:var(--fs-xs); color:var(--ink-4); margin-bottom:2px; }
+.qh-txt { font-size:var(--fs-md); color:var(--ink-2); line-height:1.5; }
+
+.section-nav { position:sticky; top:52px; z-index:90; display:flex; gap:8px; overflow-x:auto; padding:12px 4px; margin:4px -4px 0; }
+.section-nav a { flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border:1px solid var(--line); border-radius:999px; background:var(--card); color:var(--ink-2); font-size:var(--fs-sm); }
+.section-nav .nav-no { width:20px; height:20px; border-radius:50%; background:var(--brand-soft); color:var(--brand); font-size:var(--fs-xs); display:inline-flex; align-items:center; justify-content:center; }
+
+.section { background:var(--card); border-radius:var(--r-lg); box-shadow:var(--shadow-card); padding:20px 18px; margin-top:16px; }
+.section-title { display:flex; align-items:center; gap:8px; font-size:var(--fs-xl); font-weight:700; margin-bottom:16px; }
+.sec-no { width:26px; height:26px; border-radius:8px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:#fff; font-size:var(--fs-sm); display:inline-flex; align-items:center; justify-content:center; }
+.sec-line { flex:1; height:1px; background:var(--line); margin-left:8px; }
+.item { padding:14px 0; border-bottom:1px solid var(--line-soft); }
+.item:last-child { border-bottom:none; }
+.item-header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:6px; }
+.item-title { font-size:var(--fs-lg); font-weight:600; color:var(--ink); line-height:1.45; }
+.tag { flex:0 0 auto; padding:3px 10px; border-radius:999px; font-size:var(--fs-xs); font-weight:500; }
+.tag-hot { background:var(--tag-hot-bg); color:var(--tag-hot-fg); }
+.tag-source { background:var(--tag-source-bg); color:var(--tag-source-fg); }
+.tag-warn { background:var(--tag-warn-bg); color:var(--tag-warn-fg); }
+.tag-rpm { background:var(--tag-rpm-bg); color:var(--tag-rpm-fg); }
+.item-desc { color:var(--ink-2); font-size:var(--fs-md); margin-bottom:8px; }
+.item-desc b { color:var(--ink); }
+.item-meta { color:var(--ink-4); font-size:var(--fs-xs); }
+.source-link { color:var(--link); }
+.source-link:hover { text-decoration:underline; }
+
+.footer-note { text-align:center; color:var(--ink-4); font-size:var(--fs-xs); padding:24px 16px 0; }
+.empty-state { text-align:center; color:var(--ink-3); padding:60px 0; }
+
+@media print {
+  .password-overlay, .history-bar, .section-nav, .quick-hits, .hero { display:none !important; }
+  body { background:#fff; padding:0; }
+}
+</style>
+</head>
+<body>
+
+<div class="password-overlay" id="pwOverlay">
+  <div class="password-brand">DAILY INTELLIGENCE BRIEF</div>
+  <div class="password-box" id="pwBox">
+    <h2>每日情报简报</h2>
+    <div class="sub">请输入访问密码</div>
+    <div class="pw-field">
+      <input type="password" id="pwInput" placeholder="····" maxlength="20" autocomplete="off" autofocus>
+      <button type="button" class="pw-toggle" id="pwToggle" aria-label="显示/隐藏密码">👁</button>
+    </div>
+    <button type="button" id="pwBtn">进入</button>
+    <div class="error" id="pwError">密码错误，请重试</div>
+    <div class="pw-hint">密码由管理员提供</div>
+  </div>
+</div>
+
+<div class="history-bar hidden" id="historyBar">
+  <button class="nav-btn" id="btnPrev" disabled>&lt; 前一天</button>
+  <select id="dateSelect" aria-label="选择简报日期"></select>
+  <button class="nav-btn" id="btnNext" disabled>后一天 &gt;</button>
+  <span class="today-chip" id="todayChip">今天</span>
+</div>
+
+<div class="main-content hidden" id="mainContent">
+
+<div class="hero">
+  <div class="hero-top">
+    <span class="hero-kicker">DAILY INTELLIGENCE BRIEF</span>
+    <span class="hero-live">每日更新</span>
+  </div>
+  <h1>每日情报<span class="accent">简报</span></h1>
+  <div class="date">2026 年 8 月 14 日 · 星期五</div>
+  <div class="stats-row">
+    <span class="stat-pill"><b>5</b> 大板块</span>
+    <span class="stat-pill"><b>23</b> 条信息</span>
+    <span class="stat-pill"><b>8</b> RSS 源</span>
+    <span class="stat-pill">自动采集</span>
+  </div>
+</div>
+
+<div class="quick-hits">
+  <div class="qh-head">
+    <div class="qh-title">今日速览</div>
+    <div class="qh-more">Quick Hits</div>
+  </div>
+  <ul class="qh-list">
+    <li><span class="qh-no">01</span><div class="qh-body"><div class="qh-cat">科技速览</div><div class="qh-txt">IT早报 0814：长鑫超腾讯成中国市值最高上市公司；美团、淘宝闪购、京东外卖在京落地“红灯停表”；9.99 万元起比亚迪秦 MAX 上市；小米澎湃 OS 4 发布...</div></div></li>
+    <li><span class="qh-no">02</span><div class="qh-body"><div class="qh-cat">TikTok 趋势</div><div class="qh-txt">Welcome to summer: The TikTok trends defining the new season</div></div></li>
+    <li><span class="qh-no">03</span><div class="qh-body"><div class="qh-cat">电商动态</div><div class="qh-txt">咱们做SLG游戏出海，在像拉美这样的新兴市场，是该优先投入精力搞创新玩法，还是先做好本地化运营来提升下载量呢？</div></div></li>
+    <li><span class="qh-no">04</span><div class="qh-body"><div class="qh-cat">加密货币</div><div class="qh-txt">A World Cup Full of Firsts: How We Built Creator Communications Into Qatar 2022</div></div></li>
+    <li><span class="qh-no">05</span><div class="qh-body"><div class="qh-cat">副业机会</div><div class="qh-txt">Uber Eats送餐员伦敦拦路罢工 抗议“赚钱太少”</div></div></li>
+  </ul>
+</div>
+
+<div class="section-nav">
+  <a href="#sec1"><span class="nav-no">一</span>科技速览</a>
+  <a href="#sec2"><span class="nav-no">二</span>TikTok 趋势</a>
+  <a href="#sec3"><span class="nav-no">三</span>电商动态</a>
+  <a href="#sec4"><span class="nav-no">四</span>加密货币</a>
+  <a href="#sec5"><span class="nav-no">五</span>副业机会</a>
+</div>
+
+<!-- ===== 科技速览 ===== -->
+<div class="section" id="sec1">
+  <div class="section-title"><span class="sec-no">一</span><span class="icon">📡</span> 科技速览<span class="sec-line"></span></div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">IT早报 0814：长鑫超腾讯成中国市值最高上市公司；美团、淘宝闪购、京东外卖在京落地“红灯停表”；9.99 万元起比亚迪秦 MAX 上市；小米澎湃 OS 4 发布...</div>
+      <span class="tag tag-hot">IT之家</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;“IT早报”时间，大家好，现在是 2026 年 8 月 14 日星期五，今天的重要科技资讯有：&lt;/p&gt;&lt;h2&gt;1. 长鑫科技赶超腾讯，成为中国市值最高上市公司&lt;/h2&gt;&lt;p&gt;长鑫科技当前市值达 3.54 万亿元人民币，腾讯市值按汇率折算约为 3.44 万亿元人民币，长鑫科技成功完成超越。&gt;&gt; &lt;a href=&quot;https://www.ithome.com/0/989/263.htm&quot; target=&quot;_blank&quot;&gt;查看详情&lt;/a</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.ithome.com/0/989/500.htm" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">The premium on originality: Why Hollywood is betting on human stories in the AI era</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;The relationship between technology giants and Hollywood is entering a new phase. Contrary to the initial panic, technology companies are not just buying up massive content catalogs to feed their models. Instead, they</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/tech-giants-buying-hollywood-catalogs/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">The Americanization of the World Cup: How creators took over the summer of 2026</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;The biggest sporting event of the decade is currently dominating the digital feed. As the World Cup takes over North America, global brands are abandoning the traditional commercial break. Instead, they are building m</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/americanization-world-cup-2026-creators/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">The price of trust: Are beauty and health influencers losing their audience?</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;The digital feed feels highly personal and completely spontaneous. Behind many of those relaxed cosmetic reviews and daily wellness routines is a meticulously planned campaign, a strict legal contract, and frequently </div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/beauty-health-influencers-trust-crisis/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">The new creator reality: Why the traditional influencer model is breaking</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;The creator economy is experiencing a massive structural shift. While the global market value continues to grow rapidly, the daily reality for digital talent and consumers feels increasingly strained. Audiences are su</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/traditional-influencer-model-breaking/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">早报｜9999起，荣耀Robot Phone发布/Google发布Pixel 11系列/岚图董事长卢放:开发周期短不等于「速成车」</div>
+      <span class="tag tag-source">爱范儿</span>
+    </div>
+    <div class="item-desc">· 抖音处置 1.28 万条台风不实内容，重点治理 AI 虚构灾害画面 · 激进投资者要求狮门影业加速 AI 转型，否则考虑出售 · 面壁智能启动 IPO 辅导&lt;p&gt;#欢迎关注爱范儿官方微信公众号：爱范儿（微信号：ifanr），更多精彩内容第一时间为您奉上。&lt;/p&gt;</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.ifanr.com/1674986?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== TikTok 趋势 ===== -->
+<div class="section" id="sec2">
+  <div class="section-title"><span class="sec-no">二</span><span class="icon">🎬</span> TikTok 趋势<span class="sec-line"></span></div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Welcome to summer: The TikTok trends defining the new season</div>
+      <span class="tag tag-hot">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;The algorithm is officially transitioning into summer mode. As the weather warms up, the For You Page is experiencing a massive shift in tone. Right now, the feed is balancing aspirational travel aesthetics with synth</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/welcome-to-summer-the-tiktok-trends-defining-the-new-season/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Welcome to August: The TikTok trends shifting the summer</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;The TikTok algorithm is officially shifting into high gear for August. As the summer reaches its peak, the For You Page is balancing frantic audio cues, post World Cup sports fever, and high energy choreography. Here </div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/tiktok-trends-august-2026/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Entering July: The heart of summer excitement on TikTok</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;As we enter July, the heart of summer excitement beats entirely on TikTok. The algorithm is fully embracing the season, balancing bizarre synthetic humor, global sports fever, and rapid fashion curation. Here are the </div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/tiktok-trends-july-2026/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Temu在欧洲推‘砍一刀’引发热潮，其他跨境电商跟风做却没效果，问题出在哪？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">跨境电商出海欧洲市场竞争激烈，营销玩法创新是一大难题。Temu推出‘砍一刀’社交裂变玩法，成功提升了平台流量和销售额，但不少同行跟风后却效果不佳。这一模式虽在国内成熟，但在欧洲面临社交隐私等争议。那其他跨境电商跟风失败的原因究竟是什么呢？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638468" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Temu靠性价比挑战亚马逊，咱们中小跨境电商企业该跟进低价策略还是另寻出路？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">在跨境电商领域，亚马逊长期占据主导地位。但近期Temu凭借超高性价比策略，在美国市场份额持续攀升，对亚马逊构成挑战。这让众多中小跨境电商企业犯了难，是跟着打价格战，还是另想办法突出重围呢？该如何抉择才好？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638462" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">我们中小跨境电商没Temu那么多营销预算，咋靠低价策略在美国市场分一杯羹？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">跨境电商竞争激烈，Temu在美国靠低价策略、持续营销投入和高效供应链管理，销售额再创新高。但咱们中小跨境电商没那么多营销预算，也想靠低价策略在美国市场有所斩获，该咋做呢？怎样才能突破资金限制，走出自己的低价营销之路呢？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638455" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 电商动态 ===== -->
+<div class="section" id="sec3">
+  <div class="section-title"><span class="sec-no">三</span><span class="icon">🛒</span> 电商动态<span class="sec-line"></span></div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">咱们做SLG游戏出海，在像拉美这样的新兴市场，是该优先投入精力搞创新玩法，还是先做好本地化运营来提升下载量呢？</div>
+      <span class="tag tag-hot">白鲸出海</span>
+    </div>
+    <div class="item-desc">在游戏出海领域，新兴市场蕴含着巨大潜力，但也充满挑战。最近一款SLG游戏在拉美市场凭借创新玩法和本地化运营爆火。对于众多出海的SLG游戏企业来说，面临着资源有限的情况，到底是先把宝押在创新玩法上，还是先做好本地化运营，这成了一个纠结点。该如何抉择呢？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638408" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">国内应用企业在加大对东南亚市场投入时，如何平衡工具类和社交类应用的投入比例以实现利益最大化？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">当下，东南亚地区互联网用户增长迅猛，给应用出海缔造了广阔空间。不少工具类和社交类应用在该地区成绩亮眼，这也引得国内应用企业纷纷加大投入。不过，工具类和社交类应用各有特点和市场需求，那怎么平衡这两类应用的投入比例，才能让利益最大化呢？这成了企业的一大困扰。</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638440" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">咱们游戏出海买量时，针对不同地区用户特点优化素材和渠道，真能显著提升欧美市场下载量和收入吗？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">在游戏出海领域，买量策略一直是大家关注的重点。很多出海企业在买量上投入巨大，但效果参差不齐。某知名游戏厂商针对不同地区用户特点，优化买量素材和投放渠道，48 小时内旗下手游在欧美市场下载量和收入显著提升。这种做法真的能普遍适用吗？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638432" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">中小游戏厂商效仿大厂商减少传统渠道投放、增加新兴平台合作，能提升买量效果吗？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">游戏出海竞争激烈，买量成本不断攀升，买量策略的优化成了各厂商的头等大事。某知名游戏厂商调整买量策略，减少传统渠道投放，增加新兴平台合作，引发行业关注。那对于中小游戏厂商来说，跟着这么做能不能提升买量效果呢？这就很值得探讨了。</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638442" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">咱们国产SLG游戏在欧美市场买量，怎样像这款成功游戏一样提高用户获取率？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">在出海游戏市场，国产SLG游戏在欧美竞争激烈，买量是获取用户的关键手段。近期有一款国产SLG游戏通过独特买量策略在欧美取得显著成效，可很多出海企业仍在为买量难题发愁。到底有哪些可操作的方法能提高用户获取率呢？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638451" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">国产手游出海拉美市场，怎样制定出像这款游戏一样有效的买量和运营计划？</div>
+      <span class="tag tag-source">白鲸出海</span>
+    </div>
+    <div class="item-desc">在国产手游出海浪潮中，拉美市场潜力巨大但竞争也激烈。不少出海企业面临买量效果不佳、运营本地化不足等问题。近期一款国产手游在拉美凭借独特买量策略和本地化运营获巨大成功，给其他企业带来希望。那究竟怎样制定出有效的买量和运营计划，才能在拉美市场分得一杯羹呢？</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.baijing.cn/question/638454" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 加密货币 ===== -->
+<div class="section" id="sec4">
+  <div class="section-title"><span class="sec-no">四</span><span class="icon">₿</span> 加密货币<span class="sec-line"></span></div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">A World Cup Full of Firsts: How We Built Creator Communications Into Qatar 2022</div>
+      <span class="tag tag-hot">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;A World Cup comes around once every four years. But being the official voice of one, and not for a single country but for 23, is something that happens once in a lifetime. At the 2022 Qatar World Cup, INFLOW did exact</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/creator-communications-world-cup-qatar-2022/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Welcome to August: The Instagram trends defining the summer heat</div>
+      <span class="tag tag-source">INFLOW Network</span>
+    </div>
+    <div class="item-desc">&lt;p&gt;The algorithm is officially transitioning into peak summer mode. As we enter August, the Instagram feed is experiencing a massive wave of summer heat. Right now, the platform is balancing deep emotional nostalgia with</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://inflownetwork.com/instagram-trends-august-2026/" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">区块链是互联网技术补丁 需推动与实体经济深度融合</div>
+      <span class="tag tag-source">新浪科技</span>
+    </div>
+    <div class="item-desc">原标题：中国信通院魏凯：区块链是互联网技术补丁，需推动区块链与实体经济深度融合 作者：链得得潘璇 2018年5月，中国信息通信研究院工信部信息中心正式发布《2018年中国区块链产业发展白皮书》，数据显示，我国以区块链为主营业务的公司达456家。 2018年9月，在....</div>
+    <div class="item-meta">
+      <a class="source-link" href="http://go.rss.sina.com.cn/redirect.php?url=https://tech.sina.com.cn/i/2018-09-23/doc-ihkmwytn6810289.shtml" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 副业机会 ===== -->
+<div class="section" id="sec5">
+  <div class="section-title"><span class="sec-no">五</span><span class="icon">💼</span> 副业机会<span class="sec-line"></span></div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Uber Eats送餐员伦敦拦路罢工 抗议“赚钱太少”</div>
+      <span class="tag tag-hot">新浪科技</span>
+    </div>
+    <div class="item-desc">来源：界面 作者：Chris Baynes 翻译：王慧男 这两天，伦敦有上百名Uber Eats送餐员没有接单，而是在市内拦路罢工，抗议报酬太低。 这些摩托车和电动自行车骑手连续第二天来到奥德门东站的Uber Eats英国总部，堵住大楼外的马路以示抗议。他们认为，Uber Eats削减....</div>
+    <div class="item-meta">
+      <a class="source-link" href="http://go.rss.sina.com.cn/redirect.php?url=https://tech.sina.com.cn/i/2018-09-23/doc-ihkmwytn6897848.shtml" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header">
+      <div class="item-title">Manus 突然宣布独立运营，一夜回到创业状态</div>
+      <span class="tag tag-source">爱范儿</span>
+    </div>
+    <div class="item-desc">进了 Meta，Manus 怎么又独立了？&lt;p&gt;#欢迎关注爱范儿官方微信公众号：爱范儿（微信号：ifanr），更多精彩内容第一时间为您奉上。&lt;/p&gt;</div>
+    <div class="item-meta">
+      <a class="source-link" href="https://www.ifanr.com/1674998?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener">原文链接 ↗</a>
+      · 来自 RSS 自动采集
+    </div>
+  </div>
+
+</div>
+
+
+<div class="footer-note">
+  数据源: IT之家 / 爱范儿 / 少数派 / 新浪科技 / 阮一峰的网络日志 / INFLOW Network / 白鲸出海 / Odaily星球日报
+</div>
+
+</div>
+
+<script>
+const PASSWORD = "123567";
+const BRIEFS = [{"date": "2026-08-14", "label": "2026 年 8 月 14 日 · 星期五"}];
+
+const pwOverlay = document.getElementById('pwOverlay');
+const pwBox = document.getElementById('pwBox');
+const pwInput = document.getElementById('pwInput');
+const pwToggle = document.getElementById('pwToggle');
+const pwError = document.getElementById('pwError');
+const historyBar = document.getElementById('historyBar');
+const mainContent = document.getElementById('mainContent');
+const todayChip = document.getElementById('todayChip');
+
+function checkPassword() {
+  if (pwInput.value === PASSWORD) {
+    pwOverlay.classList.add('hidden');
+    historyBar.classList.remove('hidden');
+    mainContent.classList.remove('hidden');
+    initHistoryBar();
+  } else {
+    pwError.classList.add('show');
+    pwBox.classList.remove('shake');
+    void pwBox.offsetWidth;
+    pwBox.classList.add('shake');
+    pwInput.value = '';
+    pwInput.focus();
+  }
+}
+pwInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkPassword(); });
+document.getElementById('pwBtn').addEventListener('click', checkPassword);
+pwToggle.addEventListener('click', function() {
+  const isPw = pwInput.type === 'password';
+  pwInput.type = isPw ? 'text' : 'password';
+  pwToggle.textContent = isPw ? '🙈' : '👁';
+  pwInput.focus();
+});
+pwInput.addEventListener('input', function() { pwError.classList.remove('show'); });
+
+function initHistoryBar() {
+  const select = document.getElementById('dateSelect');
+  if (!BRIEFS.length) {
+    select.innerHTML = '<option>暂无历史</option>';
+    select.disabled = true;
+    document.getElementById('btnPrev').disabled = true;
+    document.getElementById('btnNext').disabled = true;
+    const content = document.querySelector('.main-content');
+    if (content) content.innerHTML = '<div class="empty-state">今日简报暂未生成，请稍后再来。</div>';
+    return;
+  }
+  select.innerHTML = BRIEFS.map((b, i) =>
+    `<option value="${i}" ${i === BRIEFS.length - 1 ? 'selected' : ''}>${b.label}</option>`
+  ).join('');
+  select.addEventListener('change', function() { updateNavButtons(); });
+  document.getElementById('btnPrev').addEventListener('click', () => navigate(-1));
+  document.getElementById('btnNext').addEventListener('click', () => navigate(1));
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  if (BRIEFS.some(b => b.date === todayStr)) todayChip.style.display = 'inline-block';
+  updateNavButtons();
+}
+function navigate(dir) {
+  const select = document.getElementById('dateSelect');
+  const newIdx = parseInt(select.value) + dir;
+  if (newIdx >= 0 && newIdx < BRIEFS.length) {
+    select.value = newIdx;
+    select.dispatchEvent(new Event('change'));
+  }
+}
+function updateNavButtons() {
+  const idx = parseInt(document.getElementById('dateSelect').value);
+  document.getElementById('btnPrev').disabled = idx <= 0;
+  document.getElementById('btnNext').disabled = idx >= BRIEFS.length - 1;
+}
+pwOverlay.addEventListener('click', function(e) { if (e.target === pwOverlay) pwInput.focus(); });
+</script>
+
+</body>
+</html>
