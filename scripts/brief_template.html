@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>每日情报简报</title>
+<style>
+/* ========== 设计令牌 Design Tokens v3 ========== */
+:root {
+  --bg: #eef0f4;            /* 页面底：冷灰 */
+  --bg-soft: #e7eaf0;
+  --card: #ffffff;
+  --ink: #111827;           /* 主墨色 */
+  --ink-2: #374151;
+  --ink-3: #6b7280;
+  --ink-4: #9ca3af;
+  --brand: #c41e3a;         /* 品牌红（真题红延续） */
+  --brand-2: #a01830;
+  --brand-soft: #fdeef0;
+  --hero1: #161a2b;
+  --hero2: #232845;
+  --hero3: #3a1c33;
+  --line: #e5e7eb;
+  --line-soft: #f0f1f4;
+  --link: #1d4ed8;
+  --ok: #059669;
+  --warn: #d97706;
+  --danger: #dc2626;
+  --tag-source-bg: #eef2ff; --tag-source-fg: #4338ca;
+  --tag-rpm-bg: #ecfdf5;    --tag-rpm-fg: #047857;
+  --tag-warn-bg: #fef2f2;   --tag-warn-fg: #b91c1c;
+  --tag-hot-bg: #fffbeb;    --tag-hot-fg: #b45309;
+  --tag-info-bg: #f3f4f6;   --tag-info-fg: #4b5563;
+  --fs-xs: 11px; --fs-sm: 12.5px; --fs-md: 13.5px; --fs-body: 15px; --fs-lg: 16.5px; --fs-xl: 19px; --fs-2xl: 24px; --fs-3xl: 30px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px;
+  --r-sm: 8px; --r-md: 14px; --r-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(17,24,39,.04), 0 4px 14px rgba(17,24,39,.05);
+  --shadow-pop: 0 12px 40px rgba(17,24,39,.16);
+  --shadow-hero: 0 12px 32px rgba(22,26,43,.28);
+  --t-fast: 150ms ease; --t-base: 260ms cubic-bezier(.4,0,.2,1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top: 64px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+  padding: 0 0 56px;
+  line-height: 1.75;
+  font-size: var(--fs-body);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+:focus { outline:none; }
+:focus-visible { outline:2px solid var(--brand); outline-offset:2px; border-radius:var(--r-sm); }
+::selection { background:var(--brand); color:#fff; }
+
+/* ===== 密码遮罩（现代暗面） ===== */
+.password-overlay {
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  background: radial-gradient(ellipse at 50% -10%, rgba(196,30,58,.28) 0%, transparent 55%),
+              linear-gradient(165deg, var(--hero1) 0%, var(--hero2) 50%, #0c0e18 100%);
+  padding: 24px;
+}
+.password-overlay.hidden { display:none; }
+.password-brand {
+  font-size: 11px; letter-spacing:5px; color: rgba(255,255,255,.45);
+  margin-bottom: var(--sp-5); text-transform: uppercase; font-weight:600;
+}
+.password-box {
+  text-align:center; padding: 36px 28px 28px;
+  width:100%; max-width: 340px;
+  background: rgba(255,255,255,.97);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop);
+  backdrop-filter: blur(6px);
+}
+.password-box h2 { font-size: var(--fs-2xl); font-weight:800; color: var(--ink); letter-spacing:2px; }
+.password-box .sub { font-size: var(--fs-md); color: var(--ink-4); margin: var(--sp-1) 0 var(--sp-6); }
+.pw-field { position:relative; }
+.pw-field input {
+  width:100%; padding: 14px 46px 14px 14px; font-size: var(--fs-lg);
+  border:1.5px solid var(--line); border-radius: var(--r-md);
+  outline:none; text-align:center; letter-spacing:6px; color:var(--ink);
+  background: var(--bg); transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+}
+.pw-field input::placeholder { color:var(--ink-4); letter-spacing:2px; }
+.pw-field input:focus { border-color: var(--brand); background:#fff; box-shadow:0 0 0 4px var(--brand-soft); }
+.pw-toggle {
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  background:none; border:none; cursor:pointer; color:var(--ink-4); font-size: var(--fs-md); padding:6px; line-height:1;
+}
+.pw-toggle:hover { color:var(--brand); }
+#pwBtn {
+  width:100%; margin-top: var(--sp-4); padding: 14px;
+  font-size: var(--fs-lg); font-weight:700; letter-spacing:6px; text-indent:6px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color:#fff; border:none; border-radius: var(--r-md); cursor:pointer;
+  box-shadow: 0 6px 16px rgba(196,30,58,.30);
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+#pwBtn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(196,30,58,.38); }
+#pwBtn:active { transform: translateY(1px); }
+.password-box .error {
+  font-size: var(--fs-md); color: var(--danger); margin-top: var(--sp-3);
+  display:none; align-items:center; justify-content:center; gap:6px; font-weight:600;
+}
+.password-box .error.show { display:flex; }
+.password-box .error::before { content:"!"; display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:var(--danger); color:#fff; font-size:11px; font-weight:700; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+.password-box.shake { animation: shake .35s ease; }
+.pw-hint { margin-top: var(--sp-6); font-size: var(--fs-sm); color: rgba(255,255,255,.4); }
+
+/* ===== 历史选择器 ===== */
+.history-bar {
+  background: rgba(238,240,244,.92);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  padding: var(--sp-2) var(--sp-3);
+  display:flex; align-items:center; justify-content:center; gap: var(--sp-2);
+  font-size: var(--fs-sm);
+}
+.history-bar select {
+  padding: 9px 12px; font-size: var(--fs-sm);
+  border:1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--ink-2); outline:none; cursor:pointer;
+  min-height: 40px; box-shadow: var(--shadow-card);
+  transition: border-color var(--t-fast);
+}
+.history-bar select:focus { border-color: var(--brand); }
+.history-bar .nav-btn {
+  padding: 9px 14px; font-size: var(--fs-sm); min-height: 40px;
+  border:1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--ink-2); cursor:pointer;
+  box-shadow: var(--shadow-card);
+  transition: all var(--t-fast); touch-action: manipulation;
+}
+.history-bar .nav-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); }
+.history-bar .nav-btn:disabled { opacity:.4; cursor:default; }
+.history-bar .today-chip {
+  display:none; padding: 4px 10px; font-size: var(--fs-xs);
+  border-radius: 999px; background: var(--brand); color:#fff; font-weight:700;
+}
+
+/* ===== 内容区 ===== */
+.main-content { animation: fadeIn .4s ease; }
+.main-content.hidden { display:none; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+
+/* ===== Hero 刊头（对标 Morning Brew 顶部品牌区） ===== */
+.hero {
+  background:
+    radial-gradient(ellipse at 85% -20%, rgba(196,30,58,.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 10% 120%, rgba(67,56,202,.22) 0%, transparent 45%),
+    linear-gradient(150deg, var(--hero1) 0%, var(--hero2) 60%, var(--hero3) 100%);
+  color:#fff;
+  padding: calc(30px + env(safe-area-inset-top,0px)) 22px 96px;
+  position:relative; overflow:hidden;
+  border-radius: 0 0 30px 30px;
+  box-shadow: var(--shadow-hero);
+}
+.hero::after {
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.hero-top { display:flex; align-items:center; justify-content:space-between; gap: var(--sp-2); position:relative; z-index:1; }
+.hero-kicker {
+  font-size: var(--fs-xs); letter-spacing:4px; text-transform:uppercase;
+  color: rgba(255,255,255,.55); font-weight:700;
+}
+.hero-live {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size: var(--fs-xs); font-weight:700; color:#fff;
+  background: rgba(196,30,58,.85); padding: 5px 12px; border-radius:999px;
+}
+.hero-live::before { content:""; width:6px; height:6px; border-radius:50%; background:#fff; animation: blink 1.4s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+.hero h1 {
+  font-size: var(--fs-3xl); font-weight:900; letter-spacing:2px;
+  margin-top: var(--sp-5); position:relative; z-index:1;
+}
+.hero h1 .accent { color:#ff5c77; }
+.hero .date {
+  font-size: var(--fs-md); color: rgba(255,255,255,.72);
+  margin-top: var(--sp-2); position:relative; z-index:1;
+}
+.hero .stats-row {
+  display:flex; gap: var(--sp-2); flex-wrap:wrap;
+  margin-top: var(--sp-4); position:relative; z-index:1;
+}
+.hero .stat-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size: var(--fs-xs); font-weight:600;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.9);
+  padding: 6px 12px; border-radius:999px;
+  backdrop-filter: blur(4px);
+}
+.hero .stat-pill b { color:#fff; font-weight:800; }
+
+/* ===== 今日速览 Quick Hits（Morning Brew 标志性设计） ===== */
+.quick-hits {
+  margin: -56px 16px 0; position:relative; z-index:5;
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop);
+  padding: var(--sp-5) var(--sp-4) var(--sp-4);
+}
+.quick-hits .qh-head {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: var(--sp-3);
+}
+.quick-hits .qh-title { font-size: var(--fs-lg); font-weight:800; color: var(--ink); display:flex; align-items:center; gap:8px; }
+.quick-hits .qh-title::before {
+  content:""; width:4px; height:18px; border-radius:2px;
+  background: linear-gradient(180deg, var(--brand), #ff5c77);
+}
+.quick-hits .qh-more { font-size: var(--fs-xs); color: var(--ink-4); }
+.qh-list { list-style:none; }
+.qh-list li {
+  display:flex; align-items:flex-start; gap: var(--sp-3);
+  padding: var(--sp-3) 0; border-bottom:1px solid var(--line-soft);
+}
+.qh-list li:last-child { border-bottom:none; padding-bottom: var(--sp-1); }
+.qh-no {
+  flex:0 0 auto; width:26px; height:26px; border-radius:8px;
+  background: var(--brand-soft); color: var(--brand);
+  font-size: var(--fs-sm); font-weight:800;
+  display:inline-flex; align-items:center; justify-content:center;
+  margin-top:2px;
+}
+.qh-body { flex:1; min-width:0; }
+.qh-cat { font-size: var(--fs-xs); font-weight:700; color: var(--ink-4); letter-spacing:.5px; margin-bottom:2px; }
+.qh-txt { font-size: var(--fs-body); font-weight:600; color: var(--ink); line-height:1.55; }
+.qh-txt a { color: inherit; text-decoration:none; }
+.qh-list li:active { background: var(--bg); border-radius: var(--r-sm); }
+
+/* ===== 板块锚点导航 ===== */
+.section-nav {
+  position:sticky; top:0; z-index:80;
+  display:flex; gap: var(--sp-2); overflow-x:auto;
+  padding: var(--sp-3) 16px; margin: var(--sp-5) 0 0;
+  scrollbar-width:none; -webkit-overflow-scrolling:touch;
+}
+.section-nav::-webkit-scrollbar { display:none; }
+.section-nav a {
+  flex:0 0 auto;
+  display:inline-flex; align-items:center; gap:6px;
+  font-size: var(--fs-sm); font-weight:700; color: var(--ink-3);
+  background: var(--card); border:1px solid var(--line);
+  padding: 8px 14px; border-radius:999px; text-decoration:none;
+  box-shadow: var(--shadow-card);
+  transition: all var(--t-fast);
+}
+.section-nav a .nav-no {
+  width:18px; height:18px; border-radius:50%;
+  background: var(--ink-3); color:#fff; font-size: var(--fs-xs);
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.section-nav a:active { transform: scale(.96); }
+
+/* ===== 板块 ===== */
+.section { margin: var(--sp-8) 16px 0; scroll-margin-top: 70px; }
+.section-title {
+  display:flex; align-items:center; gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+.section-title .sec-no {
+  flex:0 0 auto; min-width:38px; height:38px; padding:0 8px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color:#fff; font-size: var(--fs-lg); font-weight:900;
+  display:inline-flex; align-items:center; justify-content:center;
+  box-shadow: 0 4px 12px rgba(196,30,58,.28);
+}
+.section-title .icon { font-size: var(--fs-xl); }
+.section-title .st-name { font-size: var(--fs-xl); font-weight:900; color: var(--ink); letter-spacing:.5px; }
+.section-title .sec-line { flex:1; height:1px; background: linear-gradient(90deg, var(--line) 0%, transparent 100%); }
+
+/* ===== 条目卡片 ===== */
+.item {
+  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-5);
+  background: var(--card);
+  border:1px solid var(--line);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--r-md);
+  margin-bottom: var(--sp-3);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--t-fast), box-shadow var(--t-base), border-color var(--t-fast);
+}
+.item:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(17,24,39,.09); border-color: #d1d5db; }
+.item:last-child { margin-bottom: 0; }
+.item-header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap: var(--sp-2); margin-bottom: var(--sp-1); }
+.item-title { font-size: var(--fs-lg); font-weight:800; color:var(--ink); line-height:1.55; flex:1; min-width: 200px; }
+.item-title a { color: var(--link); text-decoration:none; }
+.item-title a:hover { text-decoration:underline; }
+.item-desc { font-size: var(--fs-body); color:var(--ink-2); line-height:1.85; margin-top: var(--sp-1); }
+.item-desc b { color: var(--ink); }
+.item-detail {
+  font-size: var(--fs-md); color: var(--ink-3); margin-top: var(--sp-2);
+  background: var(--bg); border-radius: var(--r-sm); padding: 6px 12px; display:inline-block;
+}
+.item-meta {
+  font-size: var(--fs-sm); color: var(--ink-4); margin-top: var(--sp-3);
+  display:flex; flex-wrap:wrap; gap: 6px 12px; align-items:center;
+  padding-top: var(--sp-2); border-top:1px dashed var(--line-soft);
+}
+
+/* ===== 标签 ===== */
+.tag { display:inline-block; padding: 3px 10px; border-radius:999px; font-size: var(--fs-xs); white-space:nowrap; font-weight:700; }
+.tag-source { background: var(--tag-source-bg); color: var(--tag-source-fg); }
+.tag-rpm { background: var(--tag-rpm-bg); color: var(--tag-rpm-fg); }
+.tag-warn { background: var(--tag-warn-bg); color: var(--tag-warn-fg); }
+.tag-hot { background: var(--tag-hot-bg); color: var(--tag-hot-fg); }
+.tag-info { background: var(--tag-info-bg); color: var(--tag-info-fg); }
+
+/* ===== 链接 ===== */
+.source-link {
+  font-size: var(--fs-sm); color: var(--link); text-decoration:none; font-weight:600;
+  display:inline-flex; align-items:center; gap:3px;
+}
+.source-link::after { content:"↗"; font-size: 10px; opacity:.75; }
+.source-link:hover { text-decoration:underline; }
+
+/* ===== 双栏 ===== */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap: var(--sp-5); align-items:start; }
+@media (max-width: 640px) { .two-col { grid-template-columns:1fr; } }
+.sub-title {
+  font-size: var(--fs-lg); font-weight:800; color: var(--ink-2);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2); border-bottom:1px dashed var(--line);
+  display:flex; align-items:center; gap:6px;
+}
+.sub-title::after { content:""; flex:1; height:1px; background: var(--line-soft); }
+
+/* ===== 评分条（四宫格） ===== */
+.score-bar {
+  display:grid; grid-template-columns:repeat(2, 1fr); gap: 8px;
+  margin-top: var(--sp-3);
+}
+.score-item {
+  display:flex; flex-direction:column; gap:2px;
+  background: var(--bg); padding: 8px 12px; border-radius: var(--r-sm);
+  border:1px solid var(--line-soft);
+}
+.score-label { font-size: var(--fs-xs); color: var(--ink-4); font-weight:600; }
+.score-val { font-size: var(--fs-md); font-weight:800; color: var(--ink-2); }
+.score-high { color: var(--ok); }
+.score-mid { color: var(--warn); }
+.score-low { color: var(--danger); }
+
+/* ===== 表格（卡片化） ===== */
+.table-wrap { margin-top: var(--sp-3); border:1px solid var(--line); border-radius: var(--r-md); overflow:hidden; box-shadow: var(--shadow-card); }
+table { width:100%; border-collapse:collapse; font-size: var(--fs-md); background: var(--card); }
+th {
+  text-align:left; padding: 10px 12px; color: var(--ink-2); font-weight:800;
+  border-bottom:2px solid var(--brand); font-size: var(--fs-sm);
+  background: linear-gradient(180deg, var(--bg) 0%, #f7f8fa 100%);
+}
+td { padding: 10px 12px; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+tr:nth-child(even) td { background: #fafbfc; }
+
+/* ===== 空状态 ===== */
+.empty-state { text-align:center; padding: var(--sp-8) var(--sp-4); color: var(--ink-4); font-size: var(--fs-md); border:1.5px dashed var(--line); border-radius: var(--r-md); background: var(--card); }
+
+/* ===== 页脚 ===== */
+.footer {
+  margin: var(--sp-8) 16px 0;
+  text-align:center; font-size: var(--fs-sm); color: var(--ink-4);
+  padding: var(--sp-5) var(--sp-4);
+  background: var(--card); border:1px solid var(--line); border-radius: var(--r-md);
+  box-shadow: var(--shadow-card);
+  line-height:1.9;
+}
+.footer .foot-rule { display:block; width:48px; height:4px; border-radius:2px; background: linear-gradient(90deg, var(--brand), #ff5c77); margin: 0 auto var(--sp-3); }
+.footer a { color: var(--ink-3); text-decoration:none; }
+.footer a:hover { color: var(--brand); }
+
+/* 打印友好 */
+@media print {
+  .password-overlay, .history-bar, .section-nav, .quick-hits, .hero { display:none !important; }
+  body { background:#fff; padding:0; }
+  .item { box-shadow:none; break-inside:avoid; }
+}
+</style>
+
+</head>
+<body>
+<div class="password-overlay" id="pwOverlay">
+  <div class="password-brand">DAILY INTELLIGENCE BRIEF</div>
+  <div class="password-box" id="pwBox">
+    <h2>每日情报简报</h2>
+    <div class="sub">请输入访问密码</div>
+    <div class="pw-field">
+      <input type="password" id="pwInput" placeholder="····" maxlength="20" autocomplete="off" autofocus>
+      <button type="button" class="pw-toggle" id="pwToggle" aria-label="显示/隐藏密码">👁</button>
+    </div>
+    <button type="button" id="pwBtn">进入</button>
+    <div class="error" id="pwError">密码错误，请重试</div>
+    <div class="pw-hint">密码由管理员提供</div>
+  </div>
+</div>
+
+<div class="history-bar hidden" id="historyBar">
+  <button class="nav-btn" id="btnPrev" disabled>&lt; 前一天</button>
+  <select id="dateSelect" aria-label="选择简报日期"></select>
+  <button class="nav-btn" id="btnNext" disabled>后一天 &gt;</button>
+  <span class="today-chip" id="todayChip">今天</span>
+</div>
+
+<div class="main-content hidden" id="mainContent">
+
+<div class="hero">
+  <div class="hero-top">
+    <span class="hero-kicker">DAILY INTELLIGENCE BRIEF</span>
+    <span class="hero-live">每日更新</span>
+  </div>
+  <h1>每日情报<span class="accent">简报</span></h1>
+  <div class="date">__DATE_LABEL__</div>
+  <div class="stats-row">
+    <span class="stat-pill"><b>5</b> 大板块</span>
+    <span class="stat-pill"><b>__TOTAL__</b> 条信息</span>
+    <span class="stat-pill"><b>__SOURCES__</b> RSS 源</span>
+    <span class="stat-pill">全网定向采集</span>
+  </div>
+</div>
+
+<div class="quick-hits">
+  <div class="qh-head">
+    <div class="qh-title">今日速览</div>
+    <div class="qh-more">Quick Hits</div>
+  </div>
+  <ul class="qh-list">
+__QUICK_HITS__
+  </ul>
+</div>
+
+<div class="section-nav">
+__SECTION_NAV__
+</div>
+
+__BODY__
+
+<div class="footer">
+  <span class="foot-rule"></span>
+  数据源：__SOURCE_LIST__<br>
+  每日情报简报 · 自动构建
+</div>
+</div>
+
+<script>
+const PASSWORD = "__PASSWORD__";
+const BRIEFS = __BRIEFS__;
+
+// ====== 密码验证 ======
+const pwOverlay = document.getElementById('pwOverlay');
+const pwBox = document.getElementById('pwBox');
+const pwInput = document.getElementById('pwInput');
+const pwToggle = document.getElementById('pwToggle');
+const pwError = document.getElementById('pwError');
+const historyBar = document.getElementById('historyBar');
+const mainContent = document.getElementById('mainContent');
+const todayChip = document.getElementById('todayChip');
+
+function checkPassword() {
+  if (pwInput.value === PASSWORD) {
+    pwOverlay.classList.add('hidden');
+    historyBar.classList.remove('hidden');
+    mainContent.classList.remove('hidden');
+    initHistoryBar();
+  } else {
+    pwError.classList.add('show');
+    pwBox.classList.remove('shake');
+    void pwBox.offsetWidth; // 重启动画
+    pwBox.classList.add('shake');
+    pwInput.value = '';
+    pwInput.focus();
+  }
+}
+pwInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkPassword();
+});
+document.getElementById('pwBtn').addEventListener('click', checkPassword);
+pwToggle.addEventListener('click', function() {
+  const isPw = pwInput.type === 'password';
+  pwInput.type = isPw ? 'text' : 'password';
+  pwToggle.textContent = isPw ? '🙈' : '👁';
+  pwInput.focus();
+});
+// 输入时清除错误提示
+pwInput.addEventListener('input', function() { pwError.classList.remove('show'); });
+
+// ====== 历史翻阅 ======
+function initHistoryBar() {
+  const select = document.getElementById('dateSelect');
+  if (!BRIEFS.length) {
+    select.innerHTML = '<option>暂无历史</option>';
+    select.disabled = true;
+    document.getElementById('btnPrev').disabled = true;
+    document.getElementById('btnNext').disabled = true;
+    const content = document.querySelector('.main-content');
+    if (content) content.innerHTML = '<div class="empty-state">今日简报暂未生成，请稍后再来。</div>';
+    return;
+  }
+  select.innerHTML = BRIEFS.map((b, i) =>
+    `<option value="${i}" ${i === BRIEFS.length - 1 ? 'selected' : ''}>${b.label}</option>`
+  ).join('');
+  select.addEventListener('change', function() { updateNavButtons(); });
+  document.getElementById('btnPrev').addEventListener('click', () => navigate(-1));
+  document.getElementById('btnNext').addEventListener('click', () => navigate(1));
+  // 当天提示 chip
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  if (BRIEFS.some(b => b.date === todayStr)) todayChip.style.display = 'inline-block';
+  updateNavButtons();
+}
+function navigate(dir) {
+  const select = document.getElementById('dateSelect');
+  const newIdx = parseInt(select.value) + dir;
+  if (newIdx >= 0 && newIdx < BRIEFS.length) {
+    select.value = newIdx;
+    select.dispatchEvent(new Event('change'));
+  }
+}
+function updateNavButtons() {
+  const idx = parseInt(document.getElementById('dateSelect').value);
+  document.getElementById('btnPrev').disabled = idx <= 0;
+  document.getElementById('btnNext').disabled = idx >= BRIEFS.length - 1;
+}
+// 点击遮罩空白处自动聚焦输入框
+pwOverlay.addEventListener('click', function(e) {
+  if (e.target === pwOverlay) pwInput.focus();
+});
+</script>
+</body>
+</html>
