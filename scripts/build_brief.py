@@ -6,6 +6,10 @@ daily-brief 自动构建脚本（GitHub Actions 用）
 版式模板: scripts/brief_template.html（与精编版 daily_brief_*.html 完全一致）。
 用法:
   python build_brief.py --date 20260814 --out ../public/index.html [--briefs-json ../data/briefs.json]
+
+防覆盖保护:
+  若 --out 目标文件已包含精编修复版标记（renderBrief 历史机制），默认拒绝覆盖，
+  自动改写输出到同目录 auto-YYYYMMDD.html；确认要强制覆盖时加 --force。
 """
 import argparse
 import datetime
@@ -216,6 +220,21 @@ def render_section_nav():
     return "\n".join(links)
 
 
+# 精编修复版保护标记：目标文件含此特征时视为"人工精编版"，禁止自动构建覆盖
+PROTECTED_MARKER = "function renderBrief("
+
+
+def is_protected_target(out_path):
+    """检测目标 HTML 是否已是含 renderBrief 历史机制的精编修复版"""
+    if not os.path.exists(out_path):
+        return False
+    try:
+        with open(out_path, encoding="utf-8", errors="ignore") as f:
+            return PROTECTED_MARKER in f.read()
+    except Exception:
+        return False
+
+
 def build_html(date_str, date_label, buckets, briefs, total, source_names):
     with open(TEMPLATE_FILE, encoding="utf-8") as f:
         tpl = f.read()
@@ -249,6 +268,7 @@ def main():
     ap.add_argument("--date", default=None, help="YYYYMMDD，默认今天（UTC+8）")
     ap.add_argument("--out", default="../public/index.html")
     ap.add_argument("--briefs-json", default="../data/briefs.json")
+    ap.add_argument("--force", action="store_true", help="强制覆盖目标文件（跳过精编版保护）")
     args = ap.parse_args()
 
     if args.date:
@@ -281,6 +301,15 @@ def main():
 
     out_path = os.path.abspath(args.out)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
+
+    # 防覆盖熔断：目标若是精编修复版（含 renderBrief 历史机制），自动构建不得覆盖，
+    # 改写输出到旁路文件，避免重演"CI 自动聚合版冲掉精编内容"事故
+    if is_protected_target(out_path) and not args.force:
+        fallback = os.path.join(os.path.dirname(out_path), f"auto-{date_str}.html")
+        print(f"BLOCKED 目标 {out_path} 是精编修复版（含 renderBrief），为避免覆盖历史内容，本次输出改写为 {fallback}")
+        print("        如确需强制覆盖，请显式加 --force")
+        out_path = fallback
+
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html_out)
 
