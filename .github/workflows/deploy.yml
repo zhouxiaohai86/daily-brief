@@ -1,12 +1,7 @@
 name: Daily Brief Auto Build & Deploy
 
 on:
-  schedule:
-    # 每天 08:00 北京时间（UTC 00:00）
-    - cron: "0 0 * * *"
   workflow_dispatch: {}
-  push:
-    branches: [main]
 
 permissions:
   contents: write
