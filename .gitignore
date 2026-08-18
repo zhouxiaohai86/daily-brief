@@ -7,5 +7,5 @@ __pycache__/
 
 # 本地环境
 .wrangler/
-deploy_out.txt
+deploy_out*.txt
 node_modules/

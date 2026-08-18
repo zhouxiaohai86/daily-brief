@@ -20,8 +20,8 @@ import sys
 import urllib.request
 
 PASSWORD = "123567"
-DEFAULT_DATE = "2026-08-14"
-DEFAULT_MARKER = "长鑫"
+DEFAULT_DATE = "2026-08-18"
+DEFAULT_MARKER = "大模型调用量"
 AUTO_MARKER = "自动采集"
 BRIEFS_START = "const BRIEFS = "
 RENDER_FN = "function renderBrief"
